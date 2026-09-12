@@ -88,6 +88,16 @@
   .ribbon-shot .cap{ font-size:.84rem; color:var(--ink-soft); margin-top:8px; text-align:center; }
   .status-shot{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:8px; margin:14px 0; overflow-x:auto; }
   .status-shot img{ min-width:700px; height:auto; display:block; }
+  .zones{ margin: 6px 0 26px; display:flex; flex-direction:column; gap:2px; }
+  .zones .zone{ display:flex; gap:14px; padding:10px 2px; border-bottom:1px dashed var(--line); align-items:flex-start; }
+  .zones .zone:last-child{ border-bottom:none; }
+  .zones .zone .num{ flex:0 0 auto; width:28px; height:28px; border-radius:50%; background:var(--amber-tint); color:var(--amber-dark); font-family:'Baloo 2',sans-serif; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:.88rem; margin-top:1px; }
+  .zones .zone .txt{ font-size:.94rem; color:var(--ink-soft); line-height:1.55; padding-top:3px; }
+  .zones .zone .txt b{ color:var(--ink); }
+  .ribbon-groups{ display:grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap:12px; margin:14px 0 26px; }
+  .ribbon-groups .grp{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-m); padding:14px 16px; box-shadow:var(--shadow-card); }
+  .ribbon-groups .grp h5{ font-family:'Baloo 2',sans-serif; color:var(--teal-dark); font-size:.95rem; margin-bottom:6px; display:flex; align-items:center; gap:.4em; }
+  .ribbon-groups .grp p{ font-size:.86rem; color:var(--ink-soft); margin:0; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -199,6 +209,11 @@
       <img src="assets/word_start.png" alt="Ecranul de start Microsoft Word">
       <figcaption>Ecranul de start Word — Document necompletat, șabloane și documente recente.</figcaption>
     </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt"><b>Document necompletat</b> — pornește un document gol, complet editabil, de la zero.</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt"><b>Mai multe șabloane</b> — deschide galeria de șabloane predefinite (CV, invitație, raport etc.), gata formatate.</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt"><b>Recente / Fixate / Partajate cu mine</b> — listele cu documentele deschise anterior, cele „fixate" pentru acces rapid și cele partajate de alți utilizatori.</span></div>
+    </div>
 
     <h3 style="margin:32px 0 14px;">Elementele interfeței</h3>
     <div class="figure">
@@ -213,52 +228,142 @@
         <div class="ribbon-shot" style="margin-top:12px;">
           <img src="assets/bara_titlu.png" alt="Bara de titlu Word">
         </div>
+        <div class="zones" style="margin-top:6px;">
+          <div class="zone"><span class="num">1</span><span class="txt"><b>Bara de acces rapid</b> — Salvare (Ctrl+S), Anulare (Ctrl+Z), Refacere (Ctrl+R); poți adăuga și alte comenzi aici. <b>Salvare automată</b> salvează periodic documentul, dar doar dacă fișierul e stocat în cloud.</span></div>
+          <div class="zone"><span class="num">2</span><span class="txt"><b>Numele fișierului</b> aflat în lucru.</span></div>
+          <div class="zone"><span class="num">3</span><span class="txt"><b>Căutare Microsoft</b> (Alt+G) — găsește rapid texte, acțiuni sau informații despre un cuvânt, chiar și fișiere, dacă ești logat în contul Office.</span></div>
+          <div class="zone"><span class="num">4</span><span class="txt"><b>Numele contului</b> de utilizator conectat.</span></div>
+          <div class="zone"><span class="num">5</span><span class="txt"><b>Panoul de management al ferestrei</b> — minimizare, restaurare/maximizare, închidere.</span></div>
+        </div>
       </div>
       <div class="item">
         <span class="name">B. Panglica (Ribbon)</span>
-        <p>Comenzile grupate pe file. Principalele file și cum arată fiecare:</p>
+        <p>Comenzile grupate pe file. Fiecare filă conține <b>grupuri logice de comenzi</b> (dacă au o săgeată în colțul din dreapta jos, apăsarea deschide mai multe opțiuni) și <b>comenzi individuale</b>. Poți alege să afișezi doar filele sau panglica întreagă. Principalele file, cu grupurile lor de comenzi:</p>
       </div>
     </div>
 
     <div class="ribbon-shot">
       <img src="assets/fila_pornire.png" alt="Fila Pornire">
-      <div class="cap"><b>Pornire</b> — Font, Paragraf, Clipboard, Stiluri</div>
+      <div class="cap"><b>Pornire</b> — fila cea mai folosită, cu comenzile de bază pentru editare și formatare</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>📋 Clipboard</h5><p><b>Lipire</b>, <b>Copiere</b>, <b>Decupare</b> și <b>Descriptor de formate</b> (copiază formatarea unui text pe alt text).</p></div>
+      <div class="grp"><h5>🔤 Font</h5><p>Tip și dimensiune literă, Aldin/Cursiv/Subliniat, culoare text și evidențiere, indice/exponent — formatare la nivel de caracter.</p></div>
+      <div class="grp"><h5>¶ Paragraf</h5><p>Marcatori, numerotare, aliniere, indentare, spațiere, umbrire și borduri — formatare la nivel de paragraf.</p></div>
+      <div class="grp"><h5>🎨 Stiluri</h5><p>Seturi predefinite de formatare (Titlu, Normal etc.) pe care le aplici dintr-un click pentru un aspect unitar.</p></div>
+      <div class="grp"><h5>🔍 Editare</h5><p>Găsire și înlocuire rapidă a unui text, selectare a elementelor din document.</p></div>
+      <div class="grp"><h5>🎤 Voce</h5><p><b>Dictare</b> — scrii cu vocea în locul tastaturii.</p></div>
+      <div class="grp"><h5>✒️ Editor</h5><p>Verificare ortografică/gramaticală și sugestii de îmbunătățire a stilului de scriere.</p></div>
+      <div class="grp"><h5>➕ Programe de completare</h5><p>Extensii/suplimente instalate care adaugă funcții noi lui Word.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_inserare.png" alt="Fila Inserare">
-      <div class="cap"><b>Inserare</b> — Tabele, Imagini, Forme, Linkuri, Antet/Subsol, Simboluri</div>
+      <div class="cap"><b>Inserare</b> — adaugă elemente noi de conținut în document</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>📄 Pagini</h5><p>Copertă, pagină necompletată, sfârșit de pagină.</p></div>
+      <div class="grp"><h5>▦ Tabele</h5><p>Inserează un tabel alegând vizual numărul de rânduri și coloane.</p></div>
+      <div class="grp"><h5>🖼️ Ilustrații</h5><p>Imagini (dispozitiv, bancă de imagini, online), Forme, Pictograme, SmartArt, Diagramă, Captură de ecran.</p></div>
+      <div class="grp"><h5>🎬 Media</h5><p>Videoclipuri online inserate direct în document.</p></div>
+      <div class="grp"><h5>🔗 Linkuri / Comentarii</h5><p>Hiperlinkuri către pagini web sau alte documente; adăugare comentarii.</p></div>
+      <div class="grp"><h5>📑 Antet și subsol</h5><p>Antet, subsol, număr de pagină — se repetă pe fiecare pagină.</p></div>
+      <div class="grp"><h5>🅰️ Text</h5><p>Casetă text, litere capitulare, obiecte, dată și oră.</p></div>
+      <div class="grp"><h5>Ω Simboluri</h5><p>Ecuații matematice și simboluri speciale (©, €, ≠ etc.).</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_desenare.png" alt="Fila Desenare">
-      <div class="cap"><b>Desenare</b> — Instrumente de desen și cerneală digitală</div>
+      <div class="cap"><b>Desenare</b> — instrumente de desen, utile mai ales pe ecrane tactile</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>✏️ Instrumente de desen</h5><p>Diverse markere/creioane colorate și instrument de selecție/laso pentru desen liber.</p></div>
+      <div class="grp"><h5>📏 Riglă / Tipare</h5><p>Afișează o riglă virtuală pe ecran, utilă pentru linii drepte desenate manual.</p></div>
+      <div class="grp"><h5>🖌️ Editare</h5><p>Formatare fundal, radieră pentru cerneală.</p></div>
+      <div class="grp"><h5>🔄 Conversie</h5><p><b>Cerneală în formă</b> și <b>Cerneală în expresie matematică</b> — transformă desenul de mână în forme/ecuații curate.</p></div>
+      <div class="grp"><h5>🖼️ Inserare</h5><p><b>Planșă pentru desen</b> — o zonă dedicată desenului în document.</p></div>
+      <div class="grp"><h5>▶️ Reproducere / Ajutor</h5><p>Redă pas cu pas cum a fost desenat un element; ajutor pentru instrumentele de cerneală.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_proiectare.png" alt="Fila Proiectare">
-      <div class="cap"><b>Proiectare</b> — Teme, Culori, Fonturi, Efecte</div>
+      <div class="cap"><b>Proiectare</b> — aspectul general și profesionist al documentului</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>🎭 Teme</h5><p>Seturi de culori, fonturi și efecte deja armonizate, aplicate documentului dintr-un click.</p></div>
+      <div class="grp"><h5>📐 Formatare document</h5><p>Stiluri de titluri gata făcute, Culori, Fonturi, Efecte, Spațiere paragraf.</p></div>
+      <div class="grp"><h5>🖍️ Fundal pagină</h5><p>Filigran/<b>Inscripționare</b>, <b>Culoare pagină</b>, <b>Borduri de pagină</b>.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_aspect.png" alt="Fila Aspect">
-      <div class="cap"><b>Aspect</b> — Margini, Orientare, Dimensiune pagină, Coloane</div>
+      <div class="cap"><b>Aspect</b> — configurează pagina și așezarea obiectelor pe ea</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>📄 Inițializare pagină</h5><p>Margini, Orientare (Portret/Vedere), Dimensiune, Coloane, Întreruperi, Numere de linie, Despărțire în silabe.</p></div>
+      <div class="grp"><h5>¶ Paragraf</h5><p>Indentare stânga/dreapta și spațiere înainte/după paragraf — control fin, în puncte/cm exacte.</p></div>
+      <div class="grp"><h5>📍 Aranjare</h5><p>Poziție, Încadrare text, Aducere/Trimitere în plan, Panou de selecție, Aliniere, Grupare, Rotire — pentru obiecte (imagini, forme) față de text.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_referinte.png" alt="Fila Referințe">
-      <div class="cap"><b>Referințe</b> — Cuprins, Note de subsol, Bibliografie</div>
+      <div class="cap"><b>Referințe</b> — hiperlinkuri către părți din document sau surse externe</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>📚 Cuprins</h5><p>Crează și actualizează automat un cuprins bazat pe titlurile documentului.</p></div>
+      <div class="grp"><h5>🔤 Note de subsol</h5><p>Inserare notă de subsol/de final, afișare note.</p></div>
+      <div class="grp"><h5>🔎 Cercetare</h5><p>Căutare și cercetare de informații direct din Word.</p></div>
+      <div class="grp"><h5>📖 Referințe și bibliografie</h5><p>Inserare referință, alegere stil de citare (ex. APA), Bibliografie, Gestionare surse.</p></div>
+      <div class="grp"><h5>🏷️ Legende / Index</h5><p>Marcare intrare de index, inserare legendă pentru imagini/tabele.</p></div>
+      <div class="grp"><h5>📇 Tabel de referințe citate</h5><p>Pentru lucrări juridice/academice — marchează și listează referințele citate.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_corespondenta.png" alt="Fila Corespondență">
-      <div class="cap"><b>Corespondență</b> — Plicuri, Etichete</div>
+      <div class="cap"><b>Corespondență</b> — trimiterea corespondenței în masă (plicuri, etichete, scrisori tip)</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>✉️ Creare</h5><p><b>Plicuri</b> și <b>Etichete</b> — fiecare cu adresa proprie.</p></div>
+      <div class="grp"><h5>🔀 Pornire Îmbinare corespondență</h5><p>Alege tipul de document și lista de destinatari pentru trimiteri multiple.</p></div>
+      <div class="grp"><h5>🖊️ Scriere și inserare câmpuri</h5><p>Bloc adresă, linie de salut, câmpuri de îmbinare personalizate.</p></div>
+      <div class="grp"><h5>👁️ Examinare rezultate</h5><p>Previzualizează scrisorile înainte de trimitere/tipărire, caută destinatari, verifică erori.</p></div>
+      <div class="grp"><h5>✅ Terminare</h5><p>Finalizează și îmbină documentele/emailurile pentru toți destinatarii.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_revizuire.png" alt="Fila Revizuire">
-      <div class="cap"><b>Revizuire</b> — Ortografie, Comentarii, Urmărire modificări</div>
+      <div class="cap"><b>Revizuire</b> — verificare, colaborare și urmărirea modificărilor</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>✔️ Verificare</h5><p>Corectare ortografică și gramaticală, Lexicon (sinonime), Contor de cuvinte.</p></div>
+      <div class="grp"><h5>🔊 Vorbire</h5><p>Citire cu voce tare a documentului.</p></div>
+      <div class="grp"><h5>♿ Accesibilitate</h5><p>Verifică dacă documentul e ușor de folosit pentru toți utilizatorii.</p></div>
+      <div class="grp"><h5>🌐 Limbă / Comentarii</h5><p>Setează limba textului; adaugă/gestionează comentarii.</p></div>
+      <div class="grp"><h5>📝 Urmărire / Modificări</h5><p><b>Track Changes</b> — înregistrează modificările; le poți accepta sau respinge una câte una.</p></div>
+      <div class="grp"><h5>⚖️ Comparare</h5><p>Compară două versiuni ale unui document.</p></div>
+      <div class="grp"><h5>🖋️ Protejare / Cerneală</h5><p>Restricționează editarea; ascunde adnotările de cerneală.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_vizualizare.png" alt="Fila Vizualizare">
-      <div class="cap"><b>Vizualizare</b> — Moduri de vizualizare, Zoom, Riglă, Grilă</div>
+      <div class="cap"><b>Vizualizare</b> — cum afișezi documentul pe ecran</div>
     </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>👁️ Vizualizări</h5><p>Mod citire, Aspect pagină imprimată, Aspect Web, Schiță, Ciornă.</p></div>
+      <div class="grp"><h5>🎯 Imersiv</h5><p>Focalizare (elimină distragerile) și Immersive Reader (citire asistată).</p></div>
+      <div class="grp"><h5>📖 Deplasarea paginilor</h5><p>Derulare Verticală sau Față în față (ca o carte).</p></div>
+      <div class="grp"><h5>🖥️ Afișare</h5><p><b>Riglă</b>, <b>Linii de grilă</b>, <b>Panou de navigare</b> — ajută la poziționare și la navigarea rapidă în document.</p></div>
+      <div class="grp"><h5>🔎 Zoom</h5><p>Mărește/micșorează afișarea documentului; 100%, O pagină, Lățime pagină etc.</p></div>
+      <div class="grp"><h5>🗔 Fereastră</h5><p>Fereastră nouă, Aranjați tot, Comutare fereastră, Scindare — lucrezi cu mai multe ferestre.</p></div>
+      <div class="grp"><h5>⚙️ Macrocomenzi</h5><p>Automatizează acțiuni repetitive înregistrate ca o secvență de pași.</p></div>
+    </div>
+
     <div class="ribbon-shot">
       <img src="assets/fila_ajutor.png" alt="Fila Ajutor">
-      <div class="cap"><b>Ajutor</b> — Căutare informații de ajutor</div>
+      <div class="cap"><b>Ajutor</b> — ultima filă din panglică</div>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>❓ Ajutor</h5><p>Comenzi care permit căutarea de informații de ajutor pentru utilizarea programului — util când nu știi cum se face ceva în Word.</p></div>
     </div>
 
     <div class="tabwalk" style="margin-top:24px;">
@@ -275,6 +380,16 @@
         <p>În partea de jos: număr pagină, număr de cuvinte, erori ortografice, limbă, predicție text, accesibilitate, moduri de vizualizare și zoom.</p>
         <div class="status-shot">
           <img src="assets/bara_stare.png" alt="Bara de stare Word">
+        </div>
+        <div class="zones" style="margin-top:6px;">
+          <div class="zone"><span class="num">1</span><span class="txt">Pagina curentă și numărul total de pagini.</span></div>
+          <div class="zone"><span class="num">2</span><span class="txt">Numărul de cuvinte — click pentru statistică (pagini, cuvinte, caractere, paragrafe, linii).</span></div>
+          <div class="zone"><span class="num">3</span><span class="txt">Lista erorilor ortografice/gramaticale găsite — apare la click.</span></div>
+          <div class="zone"><span class="num">4</span><span class="txt">Limba textului — configurezi limba și dacă vrei verificare ortografică/gramaticală.</span></div>
+          <div class="zone"><span class="num">5</span><span class="txt">Predicție de text — activează/dezactivează sugestiile de cuvinte în timp ce tastezi.</span></div>
+          <div class="zone"><span class="num">6</span><span class="txt">Verificarea accesibilității documentului, cu propuneri de îmbunătățire.</span></div>
+          <div class="zone"><span class="num">7</span><span class="txt">Modul de vizualizare: Focalizare, Mod citire, Aspect pagină imprimată, Aspect Web.</span></div>
+          <div class="zone"><span class="num">8</span><span class="txt">Panorama (Zoom) — butoane +/-, potențiometru și procentul curent.</span></div>
         </div>
       </div>
     </div>
@@ -317,7 +432,17 @@
 
     <div class="figure">
       <img src="assets/backstage.png" alt="Meniul Fișier - Backstage">
-      <figcaption>Vizualizarea Backstage (fila Fișier) — Nou, Deschidere, Salvare, Imprimare, Partajare, Închidere.</figcaption>
+      <figcaption>Vizualizarea Backstage (fila Fișier) — toate acțiunile asupra fișierului, într-un singur loc.</figcaption>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>🏠 Pornire</h5><p>Ecranul de start, cu documente recente și șabloane.</p></div>
+      <div class="grp"><h5>📄 Nou</h5><p>Creezi un document necompletat sau pornești de la un șablon.</p></div>
+      <div class="grp"><h5>📂 Deschidere</h5><p>Deschizi un document existent, local sau din cloud.</p></div>
+      <div class="grp"><h5>➕ Obțineți programe de completare</h5><p>Instalezi suplimente/extensii pentru Word.</p></div>
+      <div class="grp"><h5>ℹ️ Informații</h5><p>Detalii despre document: proprietăți, protecție, versiuni anterioare.</p></div>
+      <div class="grp"><h5>💾 Salvare / Salvare ca</h5><p><b>Salvare</b> păstrează numele/formatul/locația; <b>Salvare ca</b> permite schimbarea lor (alt nume, .pdf, altă locație).</p></div>
+      <div class="grp"><h5>🖨️ Imprimare</h5><p>Tipărești la o imprimantă reală sau „tipărești" într-un fișier .pdf.</p></div>
+      <div class="grp"><h5>📤 Partajare / Export</h5><p>Trimiți documentul altcuiva sau îl exporți în alt format de fișier.</p></div>
     </div>
 
     <h3 style="margin:28px 0 12px;">Moduri de vizualizare utile</h3>
@@ -343,12 +468,38 @@
       <img src="assets/page_setup.png" alt="Grupul Inițializare pagină">
       <div class="cap">Grupul Inițializare pagină din fila Aspect</div>
     </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt"><b>Margini</b> — stabilește marginile paginilor documentului.</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt"><b>Orientare</b> — Portret (vertical) sau Vedere (orizontal).</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt"><b>Dimensiune</b> — stabilește dimensiunea paginii (ex. A4).</span></div>
+      <div class="zone"><span class="num">4</span><span class="txt"><b>Coloane</b> — numărul de coloane în care se împarte textul pe pagină.</span></div>
+      <div class="zone"><span class="num">5</span><span class="txt"><b>Întreruperi</b> — introduce întreruperi de pagină/secțiune, ca textul să continue din pagina/coloana următoare.</span></div>
+      <div class="zone"><span class="num">6</span><span class="txt"><b>Numere de linie</b> — afișează numărul fiecărui rând din document.</span></div>
+      <div class="zone"><span class="num">7</span><span class="txt"><b>Despărțire în silabe</b> — desparte automat în silabe cuvintele de la sfârșitul rândului.</span></div>
+    </div>
 
     <h3 style="margin:28px 0 12px;">Introducerea de text</h3>
     <p>Fila Pornire → grupul Font: tip, dimensiune, Bold (Ctrl+B), Italic (Ctrl+I), Underline (Ctrl+U), culoare, evidențiere, indice, exponent.</p>
     <div class="ribbon-shot">
       <img src="assets/font_group.png" alt="Grupul Font">
       <div class="cap">Grupul Font – formatare la nivel de caracter</div>
+    </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt">Alegerea tipului de font (caracter, literă).</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt">Alegerea dimensiunii fontului.</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt">Mărirea dimensiunii fontului.</span></div>
+      <div class="zone"><span class="num">4</span><span class="txt">Micșorarea dimensiunii fontului.</span></div>
+      <div class="zone"><span class="num">5</span><span class="txt">Modificarea textului selectat cu majuscule sau minuscule.</span></div>
+      <div class="zone"><span class="num">6</span><span class="txt">Ștergerea tuturor formatărilor aplicate textului.</span></div>
+      <div class="zone"><span class="num">7</span><span class="txt"><b>Aldin (Bold)</b> — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+B</kbd> — text îngroșat.</span></div>
+      <div class="zone"><span class="num">8</span><span class="txt"><b>Cursiv (Italic)</b> — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+I</kbd> — text înclinat.</span></div>
+      <div class="zone"><span class="num">9</span><span class="txt"><b>Subliniere (Underline)</b> — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+U</kbd>.</span></div>
+      <div class="zone"><span class="num">10</span><span class="txt">Tăierea textului cu o linie (Strikethrough).</span></div>
+      <div class="zone"><span class="num">11</span><span class="txt">Indice (Subscript) — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+"="</kbd> — litere mici, jos-dreapta.</span></div>
+      <div class="zone"><span class="num">12</span><span class="txt">Exponent (Superscript) — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+Shift+"+"</kbd> — litere mici, sus-dreapta.</span></div>
+      <div class="zone"><span class="num">13</span><span class="txt">Adăugarea de efecte la un text.</span></div>
+      <div class="zone"><span class="num">14</span><span class="txt">Configurarea culorii de evidențiere (culoarea din spatele textului).</span></div>
+      <div class="zone"><span class="num">15</span><span class="txt">Configurarea culorii fontului unui text.</span></div>
     </div>
     <div class="figure" style="max-width:480px;">
       <img src="assets/font_examples.png" alt="Exemple formatare text">
@@ -359,7 +510,15 @@
     <p>Inserare → Imagini: de pe dispozitiv, bancă de imagini sau online. Se pot adăuga și forme, pictograme, modele 3D.</p>
     <div class="ribbon-shot">
       <img src="assets/illustrations.png" alt="Grupul Ilustrații">
-      <div class="cap">Grupul Ilustrații din fila Inserare</div>
+      <div class="cap">Grupul Ilustrații din fila Inserare — imaginea „Imagini" deschide 3 surse posibile</div>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>💻 Acest dispozitiv...</h5><p>Imagine salvată local pe calculator sau pe un mediu extern (ex. memory stick).</p></div>
+      <div class="grp"><h5>🖼️ Bancă de imagini...</h5><p>Imagini de calitate foarte bună, puse la dispoziție gratuit de aplicație.</p></div>
+      <div class="grp"><h5>🌐 Imagini online...</h5><p>Imagini căutate direct pe internet, inserate fără să le descarci întâi.</p></div>
+      <div class="grp"><h5>🔷 Forme / Pictograme</h5><p>Forme geometrice editabile; pictograme/emoticoane pentru accente vizuale.</p></div>
+      <div class="grp"><h5>🧊 Modele 3D</h5><p>Obiecte tridimensionale, ce pot fi rotite liber în document, din fișier propriu sau din biblioteca de modele 3D din stoc.</p></div>
+      <div class="grp"><h5>📊 SmartArt / Diagramă</h5><p>Scheme grafice pentru idei, procese sau relații; grafice cu date (bare, linii etc.).</p></div>
     </div>
     <div class="figure">
       <img src="assets/image_example.png" alt="Exemplu inserare imagine">
@@ -399,10 +558,32 @@
       <img src="assets/paragraph_group.png" alt="Grupul Paragraf">
       <div class="cap">Grupul Paragraf din fila Pornire</div>
     </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt"><b>Marcatori</b> — creează o listă cu marcatori (bullets).</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt"><b>Numerotare</b> — creează o listă numerotată.</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt">Listă cu mai multe niveluri (Multilevel List).</span></div>
+      <div class="zone"><span class="num">4</span><span class="txt">Mutarea paragrafului mai aproape de marginea din stânga (Decrease Indent).</span></div>
+      <div class="zone"><span class="num">5</span><span class="txt">Mutarea paragrafului mai departe de marginea din stânga (Increase Indent).</span></div>
+      <div class="zone"><span class="num">6</span><span class="txt">Ordonarea alfabetică/numerică a unei selecții.</span></div>
+      <div class="zone"><span class="num">7</span><span class="txt">Afișarea integrală a textului, inclusiv marcajele de paragraf ascunse.</span></div>
+      <div class="zone"><span class="num">8</span><span class="txt">Aliniere la stânga — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+L</kbd>.</span></div>
+      <div class="zone"><span class="num">9</span><span class="txt">Centrare — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+E</kbd>.</span></div>
+      <div class="zone"><span class="num">10</span><span class="txt">Aliniere la dreapta — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+R</kbd>.</span></div>
+      <div class="zone"><span class="num">11</span><span class="txt">Aliniere stânga-dreapta (Justify) — <kbd style="font-family:'Baloo 2',sans-serif;background:var(--teal-tint);color:var(--teal-dark);padding:.15em .5em;border-radius:5px;font-weight:700;">Ctrl+J</kbd> — distribuie uniform textul pe linie.</span></div>
+      <div class="zone"><span class="num">12</span><span class="txt">Configurarea spațiului dintre liniile unui paragraf sau dintre paragrafe.</span></div>
+      <div class="zone"><span class="num">13</span><span class="txt"><b>Umbrire</b> — schimbă culoarea din spatele textului.</span></div>
+      <div class="zone"><span class="num">14</span><span class="txt"><b>Borduri</b> — adaugă margini/chenar pentru o selecție.</span></div>
+    </div>
     <p>Din fila Aspect → Paragraf: indentare stânga/dreapta, spațiu înainte/după paragraf.</p>
     <div class="ribbon-shot">
       <img src="assets/indent_spacing.png" alt="Indentare și spațiere">
       <div class="cap">Indentare și spațiere din fila Aspect</div>
+    </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt">Mutarea paragrafului mai departe de marginea din stânga (Indent Left).</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt">Mutarea paragrafului mai departe de marginea din dreapta (Indent Right).</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt">Modificarea spațiului care apare deasupra paragrafului (Spacing Before).</span></div>
+      <div class="zone"><span class="num">4</span><span class="txt">Modificarea spațiului care apare după paragraf (Spacing After).</span></div>
     </div>
 
     <h3 style="margin:28px 0 12px;">Formatare imagini</h3>
@@ -411,20 +592,47 @@
       <img src="assets/image_handles.png" alt="Mânere pe imagine">
       <div class="cap">Mânere de rotire, redimensionare și poziționare</div>
     </div>
+    <div class="zones">
+      <div class="zone"><span class="num">1</span><span class="txt">Rotirea imaginii în jurul centrului dreptunghiului care o include.</span></div>
+      <div class="zone"><span class="num">2</span><span class="txt">Alegerea modului de încadrare față de textul din jur (în linie cu textul, sau textul se întrepătrunde cu imaginea etc.).</span></div>
+      <div class="zone"><span class="num">3</span><span class="txt">Mărirea/micșorarea pe orizontală a imaginii.</span></div>
+      <div class="zone"><span class="num">4</span><span class="txt">Mărirea/micșorarea proporțională (orizontal și vertical) a imaginii.</span></div>
+      <div class="zone"><span class="num">5</span><span class="txt">Mărirea/micșorarea pe verticală a imaginii.</span></div>
+    </div>
     <div class="ribbon-shot">
       <img src="assets/format_picture_tab.png" alt="Fila Format imagine">
-      <div class="cap">Fila Format imagine – Ajustare, Stiluri, Aranjare, Dimensiune</div>
+      <div class="cap">Fila Format imagine — apare automat când selectezi o imagine (sau dublu-click pe ea)</div>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>🌈 Ajustare</h5><p>Eliminare fundal, Corecturi (luminozitate/contrast), Culoare, Efecte artistice, Transparență.</p></div>
+      <div class="grp"><h5>🖼️ Stiluri imagine</h5><p>Rame și forme predefinite aplicate imaginii dintr-un click.</p></div>
+      <div class="grp"><h5>🔤 Text alternativ / Accesibilitate</h5><p>Descriere text pentru imagine, utilă pentru cititoarele de ecran.</p></div>
+      <div class="grp"><h5>📍 Aranjare</h5><p>Poziție, Încadrare text, Aducere/Trimitere în plan, Panou de selecție.</p></div>
+      <div class="grp"><h5>📐 Dimensiune</h5><p><b>Trunchiere (Crop)</b> — decupează imaginea, inclusiv „Trunchiere la formă"; înălțime/lățime exactă.</p></div>
     </div>
 
     <h3 style="margin:28px 0 12px;">Formatare tabele</h3>
     <p>La selectarea unui tabel apar filele <b>Proiectare tabel</b> și <b>Aspect</b>.</p>
     <div class="ribbon-shot">
       <img src="assets/table_design.png" alt="Proiectare tabel">
-      <div class="cap">Fila Proiectare tabel – stiluri și borduri</div>
+      <div class="cap">Fila Proiectare tabel — apare automat când selectezi un tabel</div>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>✅ Opțiuni stil tabel</h5><p>Rând antet, Rând Total, Rânduri/Coloane alternante, Prima/Ultima coloană — ce părți ale tabelului să fie evidențiate.</p></div>
+      <div class="grp"><h5>🎨 Stiluri tabel</h5><p>Șabloane vizuale gata făcute (culori, chenare) aplicate tabelului dintr-un click.</p></div>
+      <div class="grp"><h5>🖊️ Borduri</h5><p>Umbrire, stil/culoare/grosime bordură, Descriptor de margini — control fin al liniilor tabelului.</p></div>
     </div>
     <div class="ribbon-shot">
       <img src="assets/table_layout.png" alt="Aspect tabel">
-      <div class="cap">Fila Aspect – rânduri, coloane, aliniere, dimensiuni</div>
+      <div class="cap">Fila Aspect (a tabelului) — structura și dimensiunile tabelului</div>
+    </div>
+    <div class="ribbon-groups">
+      <div class="grp"><h5>🖱️ Tabel</h5><p>Selectare, Vizualizare linii de grilă, Proprietăți tabel.</p></div>
+      <div class="grp"><h5>✏️ Desenare</h5><p>Desenare tabel manual, Radieră pentru a șterge o linie.</p></div>
+      <div class="grp"><h5>➕ Rânduri și coloane</h5><p>Ștergere, Inserare deasupra/dedesubt/stânga/dreapta.</p></div>
+      <div class="grp"><h5>🔗 Îmbinare</h5><p>Îmbinare celule, Scindare celule, Scindare tabel.</p></div>
+      <div class="grp"><h5>📏 Dimensiune celulă</h5><p>Înălțime/lățime exactă a rândurilor/coloanelor, Potrivire automată.</p></div>
+      <div class="grp"><h5>↔️ Aliniere / Date</h5><p>Alinierea textului în celulă; sortare și alte operații cu datele din tabel.</p></div>
     </div>
 
     <h3 style="margin:28px 0 12px;">Reguli generale de tehnoredactare</h3>
