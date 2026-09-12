@@ -1,0 +1,156 @@
+/* =========================================================
+   Informatică — identitate vizuală comună
+   Paletă & tipografie definite o singură dată, folosite peste tot.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Karla:wght@400;500;600;700&display=swap');
+
+:root{
+  --ink: #1c2430;
+  --ink-soft: #4b5568;
+  --paper: #faf6ec;
+  --paper-deep: #f2ead8;
+  --card: #ffffff;
+  --line: #e6dcc3;
+
+  --teal: #0e6e66;
+  --teal-dark: #0a4b45;
+  --teal-tint: #e5f1ee;
+
+  --amber: #ee9c3a;
+  --amber-dark: #c97418;
+  --amber-tint: #fdf1de;
+
+  --coral: #e8654e;
+  --coral-dark: #c94a35;
+  --coral-tint: #fbe9e4;
+
+  --plum: #6a4c8c;
+  --plum-tint: #efe7f5;
+
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 26px;
+
+  --shadow-card: 0 2px 0 var(--line), 0 14px 30px -18px rgba(28,36,48,.35);
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  font-family: 'Karla', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,h4, .display{
+  font-family: 'Baloo 2', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--teal-dark);
+}
+
+p{ line-height: 1.65; margin: 0 0 .9em; color: var(--ink); max-width: 68ch; }
+img{ max-width:100%; display:block; }
+
+a{ color: inherit; }
+
+.badge{
+  display:inline-flex; align-items:center; gap:.4em;
+  font-family:'Baloo 2', sans-serif; font-weight:600; font-size:.8rem;
+  padding: .3em .9em; border-radius: 999px;
+  background: var(--amber-tint); color: var(--amber-dark);
+  border: 1px solid #f0d6a8;
+}
+
+.container{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4vw, 48px);
+}
+
+/* Reținut / definiție */
+.retine{
+  background: var(--teal-tint);
+  border: 1px solid #c9e2dc;
+  border-left: 6px solid var(--teal);
+  border-radius: var(--radius-m);
+  padding: 22px 26px;
+  margin: 22px 0;
+}
+.retine .tag{
+  font-family:'Baloo 2',sans-serif; font-weight:700; color: var(--teal);
+  text-transform: none;
+  font-size: 1rem;
+  display:flex; align-items:center; gap:.5em;
+  margin-bottom:.5em;
+}
+
+.sfat{
+  background: var(--amber-tint);
+  border: 1px solid #f2d9a6;
+  border-left: 6px solid var(--amber);
+  border-radius: var(--radius-m);
+  padding: 22px 26px;
+  margin: 22px 0;
+}
+.sfat .tag{ font-family:'Baloo 2',sans-serif; font-weight:700; color:var(--amber-dark); margin-bottom:.5em; display:flex; gap:.5em; align-items:center;}
+
+.info-fapt{
+  background: var(--plum-tint);
+  border: 1px dashed #cdb7e3;
+  border-radius: var(--radius-m);
+  padding: 16px 22px;
+  margin: 20px 0;
+  font-size: .96rem;
+}
+.info-fapt strong{ color: var(--plum); }
+
+.avertisment{
+  background: var(--coral-tint);
+  border: 1px solid #f2c6ba;
+  border-left: 6px solid var(--coral);
+  border-radius: var(--radius-m);
+  padding: 22px 26px;
+  margin: 22px 0;
+}
+.avertisment .tag{ font-family:'Baloo 2',sans-serif; font-weight:700; color:var(--coral-dark); margin-bottom:.5em; display:flex; gap:.5em; align-items:center; }
+
+.figure{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 14px;
+  box-shadow: var(--shadow-card);
+  margin: 18px 0;
+}
+.figure img{ border-radius: 8px; }
+.figure figcaption{
+  font-size: .86rem;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  padding: 0 4px;
+}
+.figure figcaption b{ color: var(--teal-dark); }
+
+.btn{
+  display:inline-flex; align-items:center; gap:.5em;
+  font-family:'Baloo 2',sans-serif; font-weight:600; font-size:1rem;
+  padding: .8em 1.5em; border-radius: 999px;
+  background: var(--teal); color:#fff; border:none; cursor:pointer;
+  text-decoration:none;
+  transition: transform .15s ease, box-shadow .15s ease;
+  box-shadow: 0 8px 20px -8px rgba(14,110,102,.6);
+}
+.btn:hover{ transform: translateY(-2px); }
+.btn.amber{ background: var(--amber); box-shadow: 0 8px 20px -8px rgba(238,156,58,.6); }
+.btn.ghost{ background: transparent; color: var(--teal); border: 2px solid var(--teal); box-shadow:none; }
+
+.scroll-x{
+  display:flex; gap:16px; overflow-x:auto; padding-bottom:10px;
+  scrollbar-width: thin;
+}
