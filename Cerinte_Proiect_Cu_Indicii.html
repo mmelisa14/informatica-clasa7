@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proiect Hardware & Software – Cerințe + Indicii | Clasa a VII-a</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .header p { font-size: 1.05em; opacity: 0.95; }
+        .content { padding: 30px 40px; }
+        .info-box {
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+            border-radius: 6px;
+        }
+        .info-box h2 { color: #667eea; margin-bottom: 8px; font-size: 1.2em; }
+        .info-box ol { margin-left: 20px; margin-top: 6px; }
+        .info-box li { line-height: 1.6; color: #444; margin-bottom: 3px; }
+        .section-title {
+            font-size: 1.6em;
+            color: #667eea;
+            margin: 30px 0 16px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid #667eea;
+        }
+        .cerinta-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.25s ease;
+        }
+        .cerinta-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.12);
+        }
+        .cerinta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .cerinta-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1.1em;
+            flex-shrink: 0;
+        }
+        .cerinta-title {
+            flex: 1;
+            margin-left: 12px;
+            font-size: 1.15em;
+            color: #222;
+            font-weight: 600;
+        }
+        .cerinta-importance {
+            background: #ffe0b2;
+            color: #e65100;
+            padding: 3px 11px;
+            border-radius: 20px;
+            font-size: 0.78em;
+            font-weight: 600;
+        }
+        .cerinta-importance.critic { background: #ffcdd2; color: #c62828; }
+        .cerinta-description {
+            background: white;
+            padding: 11px 13px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #555;
+            font-size: 0.95em;
+        }
+        .cerinta-requirements {
+            background: #e3f2fd;
+            padding: 11px 13px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2196F3;
+        }
+        .cerinta-requirements strong { display: block; color: #1565C0; margin-bottom: 5px; font-size: 0.95em; }
+        .cerinta-requirements ul { list-style: none; padding-left: 0; }
+        .cerinta-requirements li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 3px;
+            color: #444;
+            font-size: 0.93em;
+        }
+        .cerinta-requirements li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .btn-indicii {
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.92em;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .btn-indicii:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76,175,80,0.35);
+        }
+        .btn-indicii.active {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+        }
+        .indicii-container {
+            display: none;
+            background: #f1f8e9;
+            border: 2px solid #66BB6A;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            animation: slideDown 0.3s ease;
+        }
+        .indicii-container.show { display: block; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step {
+            background: white;
+            padding: 11px 13px;
+            margin-bottom: 9px;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .step-number {
+            background: #4CAF50;
+            color: white;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 7px;
+        }
+        .step strong { color: #2e7d32; }
+        .step code {
+            background: #f5f5f5;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #c62828;
+            font-size: 0.88em;
+        }
+        .step-content {
+            margin-top: 5px;
+            margin-left: 31px;
+            color: #555;
+            line-height: 1.5;
+            font-size: 0.93em;
+        }
+        .copy-box {
+            background: #fffde7;
+            border: 1px dashed #f9a825;
+            border-radius: 6px;
+            padding: 11px 13px;
+            margin-top: 7px;
+            margin-left: 31px;
+            font-size: 0.9em;
+            line-height: 1.55;
+            color: #5d4037;
+            white-space: pre-wrap;
+        }
+        .copy-box .label {
+            display: block;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 4px;
+            font-size: 0.85em;
+        }
+        .table-model {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 0.85em;
+            background: white;
+        }
+        .table-model th {
+            background: #1F4E78;
+            color: white;
+            padding: 7px 9px;
+            text-align: left;
+        }
+        .table-model td {
+            padding: 6px 9px;
+            border: 1px solid #ccc;
+        }
+        .table-model tr:nth-child(even) { background: #f5f9fc; }
+        .tip {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 9px 12px;
+            border-radius: 5px;
+            margin-top: 9px;
+            color: #6d4c00;
+            font-size: 0.9em;
+        }
+        .warning {
+            background: #fce4ec;
+            border-left: 4px solid #e53935;
+            padding: 9px 12px;
+            border-radius: 5px;
+            margin-top: 9px;
+            color: #b71c1c;
+            font-size: 0.9em;
+        }
+        .checklist {
+            background: #f0f4ff;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 22px;
+        }
+        .checklist h3 { color: #667eea; margin-bottom: 12px; }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+        }
+        .checklist-item input {
+            margin-right: 9px;
+            width: 17px; height: 17px;
+            cursor: pointer;
+        }
+        .checklist-item label { cursor: pointer; flex: 1; font-size: 0.95em; }
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #81C784);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .footer {
+            background: #f5f5f5;
+            padding: 16px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            font-size: 0.92em;
+        }
+        .download-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            border: 2px solid #66BB6A;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        .download-box a {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 11px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        .download-box a:hover { background: #388E3C; }
+        @media (max-width: 700px) {
+            .header h1 { font-size: 1.6em; }
+            .content { padding: 18px; }
+            .cerinta-title { margin-left: 0; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>💻 Proiect Hardware & Software</h1>
+        <p>Cerințe + Indicii cu texte gata de copiat | Clasa a VII-a | Informatică și TIC</p>
+    </div>
+
+    <div class="content">
+
+        <div class="download-box">
+            <strong>📄 Șablonul Word (text minim + locuri goale de completat):</strong><br>
+            <span style="color:#555; font-size:0.93em;">Descarcă, apoi completează urmând indiciile de mai jos.</span><br>
+            <a href="Proiect_Calculatoare_Hardware_Software.docx" download>⬇️ Descarcă Proiect_Calculatoare_Hardware_Software.docx</a>
+        </div>
+
+        <div class="info-box">
+            <h2>📌 Cum lucrezi</h2>
+            <ol>
+                <li><strong>Descarcă Word-ul</strong> (are structură + câteva texte de start + tabele goale).</li>
+                <li><strong>Citește cerința</strong> → apasă <strong>INDICII</strong>.</li>
+                <li>În indicii găsești <strong>texte gata de copiat</strong> (casete galbene) și <strong>modele de tabele</strong>.</li>
+                <li>Copiază textul în Word, completează tabelele, adaugă imagini.</li>
+                <li>Bifează checklist-ul când termini.</li>
+            </ol>
+        </div>
+
+        <!-- ========== PAGINA TITLU ========== -->
+        <h2 class="section-title">📄 PAGINA 1 – PAGINA DE TITLU</h2>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">1</div>
+                <div class="cerinta-title">Completează pagina de titlu</div>
+                <div class="cerinta-importance">IMPORTANT</div>
+            </div>
+            <div class="cerinta-description">
+                Pe prima pagină trebuie: logo/numele școlii, titlul, clasa, numele tău, data.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Ce trebuie să faci:</strong>
+                <ul>
+                    <li>Înlocuiește „📚 SIGLA ȘCOLII” cu numele real al școlii (sau inserează logo)</li>
+                    <li>Schimbă clasa dacă e nevoie (ex: VII-a B)</li>
+                    <li>Completează linia „Elev: ________”</li>
+                    <li>Completează data</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII PAS-CU-PAS</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Click pe „📚 SIGLA ȘCOLII”</strong>
+                    <div class="step-content">Șterge textul și scrie numele școlii.</div>
+                    <div class="copy-box"><span class="label">EXEMPLE (copiază și adaptează):</span>Liceul Teoretic „Mihai Eminescu”
+Colegiul Național „…”
+Școala Gimnazială Nr. …</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>(Opțional) Logo</strong>
+                    <div class="step-content"><code>Insert → Pictures → This Device</code> → alege logo-ul → redimensionează ținând Shift.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Completează numele și data</strong>
+                    <div class="copy-box"><span class="label">EXEMPLE:</span>Elev: Popescu Andrei
+Data: 15 septembrie 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">2</div>
+                <div class="cerinta-title">Formatare titluri (opțional – deja parțial făcut)</div>
+                <div class="cerinta-importance">ESENȚIAL</div>
+            </div>
+            <div class="cerinta-description">
+                Titlurile din șablon sunt deja stiluri Heading. Poți lăsa așa sau le poți ajusta.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Recomandări:</strong>
+                <ul>
+                    <li>Titlu principal: Bold, 22–28 pt, albastru</li>
+                    <li>Subtitluri: Bold, 14–16 pt</li>
+                    <li>Text normal: Calibri 11 pt</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Selectează un titlu → Home → Styles → Heading 1 sau Heading 2</strong>
+                </div>
+                <div class="tip">💡 Header-ul și numerotarea paginilor sunt deja pe toate paginile.</div>
+            </div>
+        </div>
+
+        <!-- ========== CONȚINUT ========== -->
+        <h2 class="section-title">📝 CONȚINUT PRINCIPAL</h2>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">3</div>
+                <div class="cerinta-title">Completează Introducerea și Obiectivele</div>
+                <div class="cerinta-importance">IMPORTANT</div>
+            </div>
+            <div class="cerinta-description">
+                În Word există deja un paragraf de start. Adaugă încă 2–3 paragrafe (minim ~200 cuvinte total) și eventual încă 1–2 obiective.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Cerințe:</strong>
+                <ul>
+                    <li>Minim 200 cuvinte la introducere</li>
+                    <li>Minim 4 obiective (ai deja 4 – poți adăuga)</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII + TEXTE DE COPIAT</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Mergi la secțiunea INTRODUCERE</strong>
+                    <div class="step-content">Șterge textul gri dintre [paranteze] și lipește textele de mai jos.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Texte gata de copiat pentru introducere</strong>
+                    <div class="copy-box"><span class="label">PARAGRAF 1 (copiază):</span>În zilele noastre, calculatoarele fac parte din viața noastră de zi cu zi. Le folosim la școală pentru a învăța, acasă pentru a ne juca sau a vorbi cu prietenii. Dar te-ai întrebat vreodată cum funcționează un calculator? Ce se află înăuntrul lui?</div>
+                    <div class="copy-box"><span class="label">PARAGRAF 2 (copiază):</span>Acest proiect ne ajută să înțelegem cele două părți esențiale: hardware-ul (componentele fizice pe care le putem atinge) și software-ul (programele care spun hardware-ului ce să facă). Fără una dintre aceste părți, calculatorul nu ar putea funcționa.</div>
+                    <div class="copy-box"><span class="label">PARAGRAF 3 (copiază):</span>Vom descoperi ce face procesorul, de ce avem nevoie de memorie RAM, cum stochează datele un disc SSD și ce rol are sistemul de operare. Cunoștințele dobândite ne ajută să fim mai conștienți de tehnologia din jurul nostru.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Obiective suplimentare (opțional)</strong>
+                    <div class="copy-box"><span class="label">POȚI ADĂUGA:</span>5. Să realizăm un tabel comparativ între componente.
+6. Să identificăm specificațiile calculatorului personal.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">4</div>
+                <div class="cerinta-title">Completează Hardware + tabel + imagini</div>
+                <div class="cerinta-importance critic">CRITIC</div>
+            </div>
+            <div class="cerinta-description">
+                Pentru fiecare componentă există o linie scurtă. Tu adaugi 2–3 propoziții, completezi tabelul și inserezi 2–3 imagini.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Cerințe:</strong>
+                <ul>
+                    <li>Minim 500 cuvinte pe secțiunea Hardware</li>
+                    <li>Minim 2–3 imagini</li>
+                    <li>Tabel completat (ai 3 rânduri + 2 goale)</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII + TEXTE + MODEL TABEL</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Texte de copiat pentru fiecare componentă</strong>
+                    <div class="copy-box"><span class="label">CPU:</span>Procesorul este „creierul” calculatorului. El execută toate instrucțiunile primite de la programe. Viteza se măsoară în gigaherți (GHz). Procesoarele moderne au mai multe nuclee, astfel pot lucra la mai multe sarcini în același timp. Exemple: Intel Core i5/i7, AMD Ryzen 5/7.</div>
+                    <div class="copy-box"><span class="label">RAM:</span>RAM-ul este memoria de lucru. Aici se stochează temporar datele și programele pe care le folosim acum. Cu cât avem mai multă RAM, cu atât putem deschide mai multe aplicații fără să încetinească sistemul. RAM-ul este volatil – datele se pierd când oprim calculatorul. Capacități uzuale: 8 GB, 16 GB, 32 GB.</div>
+                    <div class="copy-box"><span class="label">HDD / SSD:</span>Aici se salvează permanent fișierele și programele. HDD-ul folosește discuri magnetice – este mai ieftin, dar mai lent. SSD-ul folosește memorie flash – este mult mai rapid, silentios și rezistent. Majoritatea calculatoarelor noi au SSD.</div>
+                    <div class="copy-box"><span class="label">PLACA DE BAZĂ:</span>Placa de bază este „scheletul” calculatorului. Pe ea se montează procesorul, memoria RAM și se conectează toate celelalte componente. Ea asigură comunicarea între piese și alimentarea electrică.</div>
+                    <div class="copy-box"><span class="label">GPU:</span>Placa video se ocupă de afișarea imaginilor pe ecran. Procesează grafica, animațiile și jocurile. Unele procesoare au placă video integrată, iar altele folosesc o placă dedicată, mai puternică, ideală pentru jocuri.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Model tabel (completează rândurile goale din Word)</strong>
+                    <table class="table-model">
+                        <tr><th>Componentă</th><th>Funcție</th><th>Tip Memorie</th></tr>
+                        <tr><td>CPU</td><td>Execută instrucțiuni</td><td>Cache intern</td></tr>
+                        <tr><td>RAM</td><td>Stochează date temporare</td><td>Volatilă</td></tr>
+                        <tr><td>SSD/HDD</td><td>Stochează permanent</td><td>Permanentă</td></tr>
+                        <tr><td>Placa de bază</td><td>Conectează componentele</td><td>—</td></tr>
+                        <tr><td>GPU</td><td>Procesează grafica</td><td>VRAM</td></tr>
+                    </table>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Cum adaugi imagini</strong>
+                    <div class="step-content">
+                        Caută pe <strong>unsplash.com</strong> sau <strong>pixabay.com</strong>: „cpu”, „ram memory”, „ssd”.<br>
+                        Descarcă → în Word: <code>Insert → Pictures → This Device</code>.
+                    </div>
+                </div>
+                <div class="tip">💡 Cum afli specificațiile tale: Windows + I → System → About (Processor, RAM).</div>
+            </div>
+        </div>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">5</div>
+                <div class="cerinta-title">Completează Software + tabel de comparație</div>
+                <div class="cerinta-importance critic">CRITIC</div>
+            </div>
+            <div class="cerinta-description">
+                Adaugă descrieri pentru fiecare tip de software, exemple personale și completează tabelul Hardware vs Software.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Cerințe:</strong>
+                <ul>
+                    <li>Minim 400 cuvinte</li>
+                    <li>Minim 5 tipuri de software descrise</li>
+                    <li>Tabel Hardware vs Software completat</li>
+                    <li>Minim 1 imagine</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII + TEXTE + MODEL TABEL</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Texte de copiat</strong>
+                    <div class="copy-box"><span class="label">SISTEM DE OPERARE:</span>Sistemul de operare este cel mai important program. Gestionează memoria, procesorul, fișierele și dispozitivele. Fără el nu am putea rula niciun alt program. Exemple: Windows 10/11, macOS, Linux. Pe calculatorul meu este instalat: [scrie tu – ex. Windows 11 Home].</div>
+                    <div class="copy-box"><span class="label">APLICAȚII:</span>Aplicațiile sunt programe pentru sarcini concrete: scriere documente, desen, muzică, jocuri. Exemple pe care le folosesc: Microsoft Word, Google Chrome, Spotify, Minecraft, Discord.</div>
+                    <div class="copy-box"><span class="label">DRIVER-E:</span>Driverele permit sistemului de operare să comunice cu componentele hardware. Fără driver de placă video, ecranul nu ar afișa corect imaginile. Fără driver de imprimantă, nu am putea printa.</div>
+                    <div class="copy-box"><span class="label">FIRMWARE:</span>Firmware-ul este software încorporat direct în hardware. Controlează funcțiile de bază. Un exemplu este BIOS-ul / UEFI de pe placa de bază, care pornește calculatorul și verifică componentele înainte de a încărca sistemul de operare.</div>
+                    <div class="copy-box"><span class="label">SOFTWARE UTILITAR:</span>Aceste programe ajută la întreținerea calculatorului: antivirus (Windows Defender), curățare, backup (OneDrive, Google Drive). Ele protejează sistemul și îl mențin rapid.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Model tabel Hardware vs Software (completează celulele goale din Word)</strong>
+                    <table class="table-model">
+                        <tr><th>Aspect</th><th>Hardware</th><th>Software</th></tr>
+                        <tr><td>Natură</td><td>Fizic – se poate atinge</td><td>Logic – programe și instrucțiuni</td></tr>
+                        <tr><td>Modificare</td><td>Greu de schimbat (piese noi)</td><td>Ușor de actualizat sau înlocuit</td></tr>
+                        <tr><td>Cost</td><td>Mai scump</td><td>Adesea gratuit sau mai ieftin</td></tr>
+                        <tr><td>Durabilitate</td><td>Se uzează în timp</td><td>Nu se uzează, dar poate deveni învechit</td></tr>
+                        <tr><td>Rolul</td><td>Execută și stochează</td><td>Controlează și dă instrucțiuni</td></tr>
+                    </table>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Imagine (opțional dar recomandat)</strong>
+                    <div class="step-content">Apasă <code>Ctrl + Shift + Esc</code> (Task Manager) → screenshot cu <code>Win + Shift + S</code> → Inserează în Word.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== FORMATARE ========== -->
+        <h2 class="section-title">🎨 FORMATARE</h2>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">6</div>
+                <div class="cerinta-title">Header și Footer</div>
+                <div class="cerinta-importance">IMPORTANT</div>
+            </div>
+            <div class="cerinta-description">
+                Șablonul are deja header și footer cu număr de pagină. Verifică doar că apar pe toate paginile.
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Deja setate în șablon</strong>
+                    <div class="step-content">Header: „Informatică și TIC – Clasa a VII-a” | Footer: „Pagina X”</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Dacă vrei să modifici</strong>
+                    <div class="step-content">Dublu-click pe header → editează → dublu-click în corp ca să ieși.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">7</div>
+                <div class="cerinta-title">Table of Contents (opțional)</div>
+                <div class="cerinta-importance">AVANSAT</div>
+            </div>
+            <div class="cerinta-description">Poți genera automat un cuprins din titlurile Heading.</div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Insert → Table of Contents → Automatic Table</strong>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Actualizare: right-click pe cuprins → Update Field → Update entire table</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">8</div>
+                <div class="cerinta-title">Stil personalizat (opțional)</div>
+                <div class="cerinta-importance">AVANSAT</div>
+            </div>
+            <div class="cerinta-description">Poți crea un stil propriu pentru titluri, dar nu este obligatoriu.</div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Home → Styles → New Style</strong>
+                    <div class="copy-box"><span class="label">Setări:</span>Name: MeuHeading1
+Font: Calibri | Size: 16 pt | Bold | Color: #1F4E78</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== FINAL ========== -->
+        <h2 class="section-title">✅ FINALIZARE</h2>
+
+        <div class="cerinta-card">
+            <div class="cerinta-header">
+                <div class="cerinta-number">9</div>
+                <div class="cerinta-title">Verificare + Concluzii</div>
+                <div class="cerinta-importance critic">OBLIGATORIU</div>
+            </div>
+            <div class="cerinta-description">
+                Completează concluziile, verifică ortografia și numărul de cuvinte.
+            </div>
+            <div class="cerinta-requirements">
+                <strong>Checklist:</strong>
+                <ul>
+                    <li>Concluzii complete (1–2 paragrafe)</li>
+                    <li>Ortografie verificată</li>
+                    <li>Imagini plasate</li>
+                    <li>Tabele complete</li>
+                    <li>Minim ~1500 cuvinte în total</li>
+                </ul>
+            </div>
+            <button class="btn-indicii" onclick="toggleIndicii(this)">📍 INDICII + TEXT CONCLUZIE</button>
+            <div class="indicii-container">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Text de copiat pentru concluzii</strong>
+                    <div class="copy-box"><span class="label">PARAGRAF 1:</span>Hardware-ul și software-ul sunt două laturi ale aceleiași monede. Unul fără celălalt nu poate funcționa. Hardware-ul oferă „corpul” calculatorului, iar software-ul îi dă „mintea” – instrucțiunile și programele.</div>
+                    <div class="copy-box"><span class="label">PARAGRAF 2:</span>Prin acest proiect am învățat să recunoaștem componentele principale, să înțelegem rolul sistemului de operare și al aplicațiilor. Aceste cunoștințe ne ajută să fim utilizatori mai conștienți și mai competenți în era digitală.</div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Verificare finală</strong>
+                    <div class="step-content">
+                        <code>Review → Spelling & Grammar</code> (sau F7)<br>
+                        <code>Ctrl + S</code> pentru salvare<br>
+                        (Opțional) File → Export → Create PDF
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checklist">
+            <h3>📋 Checklist de finalizare</h3>
+            <div class="checklist-item"><input type="checkbox" id="c1"><label for="c1"><strong>1.</strong> Pagina de titlu completată (școală, clasă, nume, data)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c2"><label for="c2"><strong>2.</strong> Formatare titluri verificată</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c3"><label for="c3"><strong>3.</strong> Introducere + obiective (200+ cuvinte)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c4"><label for="c4"><strong>4.</strong> Hardware (texte + tabel + 2–3 imagini)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c5"><label for="c5"><strong>5.</strong> Software (texte + tabel H vs S + 1 imagine)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c6"><label for="c6"><strong>6.</strong> Header + Footer verificate</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c7"><label for="c7"><strong>7.</strong> (Opțional) Table of Contents</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c8"><label for="c8"><strong>8.</strong> (Opțional) Stil personalizat</label></div>
+            <div class="checklist-item"><input type="checkbox" id="c9"><label for="c9"><strong>9.</strong> Concluzii + verificare finală</label></div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>📚 Proiect Informatică și TIC – Clasa a VII-a</strong></p>
+        <p>Deschide Word-ul → urmează indiciile → copiază textele galbene → completează tabelele → gata!</p>
+        <p style="margin-top:6px; font-size:0.85em; color:#999;">Data: <span id="today"></span></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('today').textContent = new Date().toLocaleDateString('ro-RO', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+    function toggleIndicii(button) {
+        const container = button.nextElementSibling;
+        if (container.classList.contains('show')) {
+            container.classList.remove('show');
+            button.textContent = '📍 INDICII PAS-CU-PAS';
+            button.classList.remove('active');
+        } else {
+            container.classList.add('show');
+            button.textContent = '📍 ASCUNDE INDICII';
+            button.classList.add('active');
+        }
+    }
+    const checkboxes = document.querySelectorAll('.checklist-item input');
+    const progressFill = document.getElementById('progressFill');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            const checked = document.querySelectorAll('.checklist-item input:checked').length;
+            progressFill.style.width = (checked / checkboxes.length * 100) + '%';
+        });
+    });
+</script>
+</body>
+</html>
