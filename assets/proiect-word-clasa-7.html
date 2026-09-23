@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proiect Word – Clasa a VII-a | Școala Gimnazială Nr. 23 Constanța</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a5f7a;
+      --primary-light: #2a8aab;
+      --primary-dark: #0d3d4f;
+      --accent: #57c5b6;
+      --success: #2e7d32;
+      --success-bg: #e8f5e9;
+      --warning: #f9a825;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 20px rgba(26, 95, 122, 0.08);
+      --shadow-hover: 0 8px 30px rgba(26, 95, 122, 0.15);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+      color: white;
+      padding: 2.5rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 140%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(87, 197, 182, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .school-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Progress section */
+    .progress-section {
+      max-width: 900px;
+      margin: -1.5rem auto 0;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .progress-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .progress-info {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .progress-info h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .progress-count {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .progress-count span {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-wrap {
+      flex: 2;
+      min-width: 200px;
+    }
+
+    .progress-bar-bg {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--primary-light));
+      border-radius: 50px;
+      width: 0%;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-percent {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 0.4rem;
+      text-align: right;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .reset-btn:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+      background: #fef2f2;
+    }
+
+    /* Main content */
+    .main {
+      max-width: 900px;
+      margin: 2rem auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .intro-box {
+      background: linear-gradient(135deg, #e0f7f5 0%, #e8f4f8 100%);
+      border: 1px solid rgba(87, 197, 182, 0.3);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .intro-box h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .intro-box p {
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    /* Requirement cards */
+    .req-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .req-card.completed {
+      border-color: var(--success);
+      background: linear-gradient(to right, var(--success-bg) 0%, var(--card) 12%);
+    }
+
+    .req-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .req-header:hover {
+      background: #f8fafc;
+    }
+
+    .req-card.completed .req-header:hover {
+      background: #e8f5e9;
+    }
+
+    .req-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .req-card.completed .req-number {
+      background: var(--success);
+    }
+
+    .req-number .check-icon {
+      display: none;
+      font-size: 1.3rem;
+    }
+
+    .req-card.completed .req-number .num {
+      display: none;
+    }
+
+    .req-card.completed .req-number .check-icon {
+      display: block;
+    }
+
+    .req-title-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .req-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+    }
+
+    .req-points {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .req-card.completed .req-title {
+      color: var(--success);
+    }
+
+    .toggle-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+
+    .req-card.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .req-body {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .req-card.open .req-body {
+      display: block;
+    }
+
+    .req-content {
+      padding-top: 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .req-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .req-content h3:first-child {
+      margin-top: 0;
+    }
+
+    .req-content ul, .req-content ol {
+      margin: 0.5rem 0 0.75rem 1.25rem;
+    }
+
+    .req-content li {
+      margin-bottom: 0.35rem;
+    }
+
+    .req-content p {
+      margin-bottom: 0.6rem;
+    }
+
+    .req-content strong {
+      font-weight: 600;
+    }
+
+    .req-content em {
+      font-style: italic;
+    }
+
+    .example-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      padding: 0.85rem 1.1rem;
+      margin: 0.75rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+    }
+
+    .attention-box {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      margin: 0.75rem 0;
+      font-size: 0.92rem;
+    }
+
+    .attention-box strong {
+      color: #f57f17;
+    }
+
+    /* Action button */
+    .action-row {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .mark-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s;
+    }
+
+    .mark-btn.incomplete {
+      background: var(--primary);
+      color: white;
+    }
+
+    .mark-btn.incomplete:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3);
+    }
+
+    .mark-btn.complete {
+      background: var(--success);
+      color: white;
+    }
+
+    .mark-btn.complete:hover {
+      background: #1b5e20;
+    }
+
+    .status-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .req-card.completed .status-label {
+      color: var(--success);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      background: white;
+    }
+
+    .footer strong {
+      color: var(--primary);
+    }
+
+    /* Confetti celebration */
+    .celebration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+    }
+
+    .celebration.show {
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .progress-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .req-header {
+        padding: 1rem;
+      }
+
+      .req-body {
+        padding: 0 1rem 1.25rem;
+      }
+
+      .mark-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="school-badge">
+        🏫 Școala Gimnazială Nr. 23 Constanța
+      </div>
+      <h1>Proiect Word – Clasa a VII-a</h1>
+      <p>Urmărește-ți progresul. Marchează fiecare cerință pe măsură ce o realizezi.</p>
+    </div>
+  </header>
+
+  <div class="progress-section">
+    <div class="progress-card">
+      <div class="progress-info">
+        <h2>Progresul tău</h2>
+        <div class="progress-count"><span id="done-count">0</span> / <span>10</span></div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-percent" id="progress-percent">0%</div>
+      </div>
+      <button class="reset-btn" id="reset-btn" title="Resetează tot progresul">Resetează</button>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="intro-box">
+      <h2>Cerință generală</h2>
+      <p>Realizați un proiect/referat în Microsoft Word, pe o temă aleasă de voi, cu o lungime de minimum 6 pagini.<br>
+      Documentul trebuie să respecte următoarele cerințe:</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="req-card" data-id="1">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">1</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">COPERTA ȘI ANTETUL DOCUMENTULUI</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>Prima pagină a proiectului va conține:</p>
+          <ul>
+            <li>sigla Școlii Gimnaziale Nr. 23 Constanța;</li>
+            <li>titlul proiectului;</li>
+            <li>numele și prenumele elevului;</li>
+            <li>clasa;</li>
+            <li>data, inserată astfel încât să se actualizeze automat.</li>
+          </ul>
+          <h3>Modificări obligatorii:</h3>
+          <ul>
+     
+            <li>Pentru textul de pe prima pagină se vor aplica minimum 4 elemente de formatare din fila Home/Pornire, din zonele:
+              <ul>
+                <li>Font;</li>
+                <li>Paragraph/Paragraf;</li>
+                <li>Styles/Stiluri.</li>
+              </ul>
+            </li>
+            <li>În Header/Antet se va scrie:<br><strong>Școala Gimnazială Nr. 23 Constanța</strong></li>
+            <li>În Footer/Subsol se va insera numărul paginii.</li>
+            <li>Prima pagină nu se numerotează.</li>
+          </ul>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 1)">Marchează ca realizat</button>
+          <span class="status-label" id="status-1">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="req-card" data-id="2">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">2</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">FORMATAREA DOCUMENTULUI</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>Întregul document trebuie să respecte următoarele setări:</p>
+          <h3>Dimensiunea paginii</h3>
+          <ul>
+            <li>Format: A4</li>
+          </ul>
+          <h3>Margini</h3>
+          <ul>
+            <li>Sus: 2 cm</li>
+            <li>Jos: 2 cm</li>
+            <li>Stânga: 2,5 cm</li>
+            <li>Dreapta: 2 cm</li>
+          </ul>
+          <h3>Text</h3>
+          <ul>
+            <li>Font: Times New Roman</li>
+            <li>Dimensiune: 12 pt</li>
+            <li>Aliniere: Justify</li>
+            <li>Spațiere între rânduri: Single</li>
+            <li>Prima linie a fiecărui paragraf: indentare de 1 cm</li>
+            <li>Spațiere după paragraf: 0 pt</li>
+          </ul>
+          <div class="attention-box">
+            <strong>Atenție:</strong> spațierea dintre rânduri trebuie să fie Single, nu 1,5 Lines.
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 2)">Marchează ca realizat</button>
+          <span class="status-label" id="status-2">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="req-card" data-id="3">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">3</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">STRUCTURA PROIECTULUI ȘI BIBLIOGRAFIA</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>Proiectul trebuie să conțină minimum 3 capitole/subtitluri.</p>
+          <div class="example-box">
+            <strong>Exemplu:</strong><br>
+            • 1. Introducere<br>
+            • 2. Conținutul temei<br>
+            • 3. Concluzii
+          </div>
+          <p>La finalul proiectului se va realiza o secțiune intitulată:</p>
+          <p><strong>Bibliografie / Surse</strong></p>
+          <p>Sursele utilizate vor fi numerotate:</p>
+          <ol>
+            <li>Sursa 1</li>
+            <li>Sursa 2</li>
+            <li>Sursa 3</li>
+          </ol>
+          <p>Atunci când este utilizată o informație dintr-o sursă, numărul acesteia va fi menționat la finalul paragrafului, între paranteze pătrate.</p>
+          <div class="example-box">
+            <strong>Exemplu:</strong><br>
+            Internetul reprezintă una dintre cele mai importante surse de informare din prezent. [1]<br><br>
+            Dacă în același paragraf sunt utilizate două surse:<br>
+            [1], [2]
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 3)">Marchează ca realizat</button>
+          <span class="status-label" id="status-3">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="req-card" data-id="4">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">4</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">CONȚINUTUL PROIECTULUI</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>Conținutul proiectului trebuie să fie corect și relevant pentru tema aleasă.</p>
+          <p>Informațiile trebuie să fie redactate de elev într-o formă proprie.</p>
+          <div class="attention-box">
+            <strong>Atenție:</strong> Nu copiați integral informații de pe Internet. Citiți informația, înțelegeți-o și apoi prezentați-o cu propriile cuvinte.
+          </div>
+          <p>Proiectul trebuie să demonstreze că informațiile au fost înțelese și prelucrate de elev.</p>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 4)">Marchează ca realizat</button>
+          <span class="status-label" id="status-4">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="req-card" data-id="5">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">5</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">INSERAREA ȘI FORMATAREA IMAGINILOR</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>În proiect trebuie să fie inserate minimum 4 imagini, relevante pentru tema aleasă.</p>
+          <p>Imaginile trebuie:</p>
+          <ul>
+            <li>să fie redimensionate corespunzător;</li>
+            <li>să fie poziționate corect în pagină;</li>
+            <li>să fie integrate în text;</li>
+            <li>să fie formatate folosind opțiunile disponibile pentru imagini.</li>
+          </ul>
+          <h3>Modificare obligatorie:</h3>
+          <p>Pentru cel puțin 2 imagini, textul trebuie să fie poziționat în jurul imaginii folosind:</p>
+          <p><strong>Picture Format → Wrap Text → Square</strong><br>
+          sau o altă opțiune de încadrare potrivită.</p>
+          <p>Imaginea nu trebuie să acopere textul și nici să fie poziționată necorespunzător în pagină.</p>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 5)">Marchează ca realizat</button>
+          <span class="status-label" id="status-5">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="req-card" data-id="6">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">6</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">TABEL ȘI OPERAȚII MATEMATICE</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>În proiect trebuie inserat minimum un tabel cu informații relevante pentru tema aleasă.</p>
+          <p>Tabelul trebuie:</p>
+          <ul>
+            <li>să conțină informații relevante;</li>
+            <li>să aibă cel puțin o coloană/rând cu valori numerice;</li>
+            <li>să conțină cel puțin o formulă aplicată valorilor numerice.</li>
+          </ul>
+          <div class="example-box">
+            <strong>Exemplu de formulă:</strong><br>
+            SUM – pentru calcularea unui total.
+          </div>
+          <h3>Formatarea tabelului:</h3>
+          <ul>
+            <li>se va aplica un Table Style/Stil de tabel;</li>
+            <li>se vor modifica bordurile tabelului;</li>
+            <li>textul din celule va fi aliniat central;</li>
+            <li>tabelul trebuie să fie poziționat corespunzător în pagină.</li>
+          </ul>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 6)">Marchează ca realizat</button>
+          <span class="status-label" id="status-6">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="req-card" data-id="7">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">7</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">LISTĂ ȘI CASETĂ TEXT</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>În proiect trebuie să existe:</p>
+          <h3>O listă</h3>
+          <p>Lista poate fi:</p>
+          <ul>
+            <li>Bullets (marcatori)</li>
+            <li>sau</li>
+            <li>Numbering (numerotare).</li>
+          </ul>
+          <div class="example-box">
+            <strong>Exemplu:</strong><br>
+            Avantajele tehnologiei:<br>
+            • acces rapid la informații;<br>
+            • comunicare;<br>
+            • educație;<br>
+            • divertisment.
+          </div>
+          <h3>Casetă text</h3>
+          <p>Se va insera cel puțin o casetă text (Text Box).</p>
+          <p>Caseta trebuie să conțină o informație relevantă pentru tema proiectului.</p>
+          <div class="example-box">
+            <strong>Exemplu:</strong><br>
+            Știați că?<br>
+            Primul calculator electronic a ocupat o încăpere întreagă.
+          </div>
+          <p>Caseta trebuie să fie formatată și poziționată corespunzător în pagină.</p>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 7)">Marchează ca realizat</button>
+          <span class="status-label" id="status-7">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="req-card" data-id="8">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">8</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">SMARTART SAU GRAFIC</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>În proiect trebuie inserat un SmartArt sau un grafic (Chart) relevant pentru tema aleasă.</p>
+          <h3>Varianta 1 – SmartArt</h3>
+          <p>SmartArt-ul trebuie să prezinte informații legate de tema proiectului.</p>
+          <div class="example-box">
+            <strong>Exemplu:</strong><br>
+            Tehnologie → Internet → Aplicații → Utilizatori
+          </div>
+          <h3>Varianta 2 – Grafic</h3>
+          <p>Graficul trebuie să prezinte date relevante pentru tema aleasă.</p>
+          <p>Datele pot fi:</p>
+          <ul>
+            <li>preluate dintr-o sursă;</li>
+            <li>calculate de elev;</li>
+            <li>inventate, dacă sunt prezentate clar ca exemple.</li>
+          </ul>
+          <p>SmartArt-ul/graficul trebuie să aibă un titlu și să fie formatat corespunzător.</p>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 8)">Marchează ca realizat</button>
+          <span class="status-label" id="status-8">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="req-card" data-id="9">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">9</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">PREZENTAREA PROIECTULUI</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>La final, fiecare elev va prezenta proiectul</p>
+          <p>Prezentarea o să dureze aproximativ 3–5 minute </p>
+       
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 9)">Marchează ca realizat</button>
+          <span class="status-label" id="status-9">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="req-card" data-id="10">
+      <div class="req-header" onclick="toggleCard(this)">
+        <div class="req-number"><span class="num">10</span><span class="check-icon">✓</span></div>
+        <div class="req-title-wrap">
+          <div class="req-title">CERINȚĂ FINALĂ ÎN WORD</div>
+          <div class="req-points">1 punct</div>
+        </div>
+        <div class="toggle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="req-body">
+        <div class="req-content">
+          <p>Voi adresa o intrebare din word sau voi cere sa se realizeze o mica modificare in proiect</p>
+        </div>
+        <div class="action-row">
+          <button class="mark-btn incomplete" onclick="toggleComplete(event, 10)">Marchează ca realizat</button>
+          <span class="status-label" id="status-10">Nerealizat</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Școala Gimnazială Nr. 23 Constanța</strong> · Proiect Word – Clasa a VII-a</p>
+    <p style="margin-top: 0.35rem; font-size: 0.85rem;">Progresul se salvează automat în browser-ul tău</p>
+  </footer>
+
+  <div class="celebration" id="celebration"></div>
+
+  <script>
+    const STORAGE_KEY = 'proiect-word-vii-progress';
+    let completed = {};
+
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) completed = JSON.parse(saved);
+      } catch (e) {
+        completed = {};
+      }
+      updateUI();
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+    }
+
+    function toggleCard(header) {
+      const card = header.closest('.req-card');
+      card.classList.toggle('open');
+    }
+
+    function toggleComplete(event, id) {
+      event.stopPropagation();
+      completed[id] = !completed[id];
+      saveProgress();
+      updateUI();
+
+      if (Object.values(completed).filter(Boolean).length === 10) {
+        celebrate();
+      }
+    }
+
+    function updateUI() {
+      let count = 0;
+      for (let i = 1; i <= 10; i++) {
+        const card = document.querySelector(`.req-card[data-id="${i}"]`);
+        const btn = card.querySelector('.mark-btn');
+        const status = document.getElementById(`status-${i}`);
+
+        if (completed[i]) {
+          count++;
+          card.classList.add('completed');
+          btn.className = 'mark-btn complete';
+          btn.textContent = '✓ Realizat – Anulează';
+          status.textContent = '✓ Realizat';
+        } else {
+          card.classList.remove('completed');
+          btn.className = 'mark-btn incomplete';
+          btn.textContent = 'Marchează ca realizat';
+          status.textContent = 'Nerealizat';
+        }
+      }
+
+      document.getElementById('done-count').textContent = count;
+      const percent = Math.round((count / 10) * 100);
+      document.getElementById('progress-fill').style.width = percent + '%';
+      document.getElementById('progress-percent').textContent = percent + '%';
+    }
+
+    function celebrate() {
+      const el = document.getElementById('celebration');
+      el.classList.add('show');
+      el.innerHTML = '';
+      const colors = ['#1a5f7a', '#57c5b6', '#2e7d32', '#f9a825', '#e91e63', '#9c27b0'];
+      for (let i = 0; i < 60; i++) {
+        const conf = document.createElement('div');
+        conf.style.cssText = `
+          position: absolute;
+          width: ${6 + Math.random() * 8}px;
+          height: ${6 + Math.random() * 8}px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          left: ${Math.random() * 100}%;
+          top: -20px;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+          animation: fall ${2 + Math.random() * 2}s linear forwards;
+          opacity: 0.9;
+        `;
+        el.appendChild(conf);
+      }
+      if (!document.getElementById('confetti-style')) {
+        const style = document.createElement('style');
+        style.id = 'confetti-style';
+        style.textContent = `
+          @keyframes fall {
+            to {
+              transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      setTimeout(() => {
+        el.classList.remove('show');
+        el.innerHTML = '';
+      }, 4000);
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (confirm('Sigur vrei să resetezi tot progresul?')) {
+        completed = {};
+        saveProgress();
+        updateUI();
+      }
+    });
+
+    // Open first incomplete card on load
+    loadProgress();
+    const firstIncomplete = document.querySelector('.req-card:not(.completed)');
+    if (firstIncomplete) firstIncomplete.classList.add('open');
+  </script>
+</body>
+</html>
