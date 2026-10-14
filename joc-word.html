@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misiunea Word</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Concept: caiet de matematică (pătrățele) + fereastra Word în miniatură, ca teren de joacă pentru clasa a VII-a */
+:root{
+  --paper:#f4f7fb; --grid:#d9e1ef; --ink:#14213a; --muted:#56637d;
+  --card:#ffffff; --line:#c3cfe3; --blue:#2b579a; --blue-ink:#ffffff;
+  --hi:#ffe14d; --hi-ink:#3a2f00;
+  --good:#17693f; --good-bg:#def3e8; --bad:#a82019; --bad-bg:#fbe5e3;
+  --win-bar:#2b579a; --win-gray:#dde1e8; --ribbon:#f1f3f7; --ribbon-line:#c9ced8;
+  --page:#ffffff; --page-ink:#1b1b1b; --key:#eef2f9; --key-line:#9fb0cc;
+  --f-d:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-b:"Figtree",system-ui,"Segoe UI",sans-serif;
+  --f-m:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1521; --grid:#1a2335; --ink:#e8eefb; --muted:#9aa8c4;
+  --card:#172033; --line:#2c3a57; --blue:#3f6fc4; --blue-ink:#ffffff;
+  --good:#7fe0ac; --good-bg:#12301f; --bad:#ff9a92; --bad-bg:#3a1a18;
+  --win-bar:#264a85; --win-gray:#2b3140; --ribbon:#232a38; --ribbon-line:#3a4356;
+  --key:#202b44; --key-line:#4a5d86; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#0f1521; --grid:#1a2335; --ink:#e8eefb; --muted:#9aa8c4;
+  --card:#172033; --line:#2c3a57; --blue:#3f6fc4; --blue-ink:#ffffff;
+  --good:#7fe0ac; --good-bg:#12301f; --bad:#ff9a92; --bad-bg:#3a1a18;
+  --win-bar:#264a85; --win-gray:#2b3140; --ribbon:#232a38; --ribbon-line:#3a4356;
+  --key:#202b44; --key-line:#4a5d86; color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background-color:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;padding-inline:16px;padding-block:18px 48px;min-height:100vh}
+.wrap{max-width:980px;margin-inline:auto}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-d);line-height:1.1;text-wrap:balance;margin:0}
+p{margin:0}
+
+/* bară sus */
+.bar{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.brand{font-family:var(--f-d);font-weight:800;font-size:1.25rem;letter-spacing:-.01em}
+.brand i{font-style:normal;background:var(--hi);color:var(--hi-ink);padding:0 .3em;border-radius:3px}
+.crumb{font-family:var(--f-d);font-weight:700;flex:1;min-width:0}
+.xp{font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.xp b{color:var(--ink)}
+.btn{background:var(--blue);color:var(--blue-ink);border:0;border-radius:8px;padding:.7em 1.2em;font-weight:700;box-shadow:0 3px 0 rgba(0,0,0,.28);transition:transform .08s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn.sm{padding:.4em .8em;font-size:.9rem}
+.btn[disabled]{opacity:.5;cursor:default}
+
+/* start */
+.start{display:grid;gap:22px;margin-top:6vh;max-width:640px}
+.start h1{font-size:clamp(2.4rem,9vw,4.4rem);font-weight:800;letter-spacing:-.03em}
+.start h1 mark{background:var(--hi);color:var(--hi-ink);padding:0 .12em;border-radius:4px}
+.lead{color:var(--muted);font-size:1.1rem;max-width:56ch}
+.namebox{display:flex;gap:10px;flex-wrap:wrap}
+.namebox input{flex:1;min-width:200px;font:inherit;font-size:1.1rem;padding:.7em .9em;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.facts{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.facts li{font-size:.85rem;border:1.5px dashed var(--line);border-radius:999px;padding:.2em .8em;color:var(--muted)}
+
+/* hartă */
+.h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;margin-bottom:6px}
+.hubgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-block:20px}
+.lcard{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px;text-align:left;display:grid;gap:8px;align-content:start;min-width:0;transition:transform .12s,border-color .12s}
+.lcard:hover{transform:translateY(-3px);border-color:var(--blue)}
+.lcard .n{font-family:var(--f-d);font-weight:800;font-size:2.4rem;line-height:1;color:var(--blue)}
+.lcard h3{font-size:1.2rem}
+.lcard p{color:var(--muted);font-size:.93rem}
+.stars{display:flex;gap:3px}
+.stars svg{width:20px;height:20px;fill:none;stroke:var(--key-line);stroke-width:1.5}
+.stars svg.on{fill:var(--hi);stroke:#b89a00}
+.rankline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pill{background:var(--hi);color:var(--hi-ink);font-weight:700;border-radius:999px;padding:.15em .8em;font-size:.9rem}
+
+/* nivel */
+.prog{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
+.mission{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:14px}
+.tag{font-family:var(--f-m);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;background:var(--hi);color:var(--hi-ink);padding:.15em .6em;border-radius:3px}
+.mission p{font-size:1.12rem;font-weight:600;flex:1;min-width:220px}
+.stage{min-width:0}
+.fb{margin-top:14px;border-radius:10px;padding:12px 14px;font-weight:500;border:2px solid}
+.fb.good{background:var(--good-bg);color:var(--good);border-color:var(--good)}
+.fb.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad)}
+.fb.hint{background:var(--card);color:var(--ink);border-color:var(--line)}
+.fb b{font-weight:800}
+.actions{margin-top:14px;display:flex;justify-content:flex-end}
+kbd{font-family:var(--f-m);font-weight:700;font-size:.85em;background:var(--key);border:1.5px solid var(--key-line);border-bottom-width:4px;border-radius:6px;padding:.05em .5em;display:inline-block;color:var(--ink)}
+.plus{color:var(--muted);margin-inline:.2em}
+
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:.9em 1em;text-align:left;font-weight:600;min-width:0}
+.opt:hover:not([disabled]){border-color:var(--blue)}
+.opt.ok{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.opt.no{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);opacity:.8}
+.opt[disabled]{cursor:default}
+
+/* fereastra Word */
+.winscroll{overflow-x:auto;padding-bottom:4px}
+.win{min-width:0;border:1px solid var(--ribbon-line);border-radius:8px;overflow:hidden;background:var(--win-gray);box-shadow:0 6px 0 rgba(0,0,0,.12);font-size:12.5px;color:var(--ink)}
+.win [data-part]{cursor:pointer;position:relative}
+.win [data-part]:hover{outline:2px dashed var(--hi);outline-offset:-2px}
+.w-title{background:var(--win-bar);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:6px 10px;min-height:34px}
+.w-qa{display:flex;gap:10px;padding:3px 6px;align-items:center}
+.w-qa svg,.w-search svg{width:15px;height:15px}
+.w-name{flex:1;text-align:center;font-weight:600}
+.w-search{background:rgba(255,255,255,.22);border-radius:4px;padding:3px 10px;display:flex;gap:6px;align-items:center;min-width:130px}
+.w-acct{width:24px;height:24px;border-radius:50%;background:#fff;color:var(--win-bar);font-weight:800;display:grid;place-items:center;font-size:10px}
+.w-ctl{letter-spacing:.8em;font-size:13px}
+.w-tabs{display:flex;flex-wrap:wrap;background:var(--win-bar);padding-inline:6px;gap:2px}
+.w-tab{padding:6px 10px 5px;color:#fff;white-space:nowrap;border:0;background:transparent;border-radius:4px 4px 0 0;font-size:12.5px}
+.w-tab.act{background:var(--ribbon);color:var(--ink);font-weight:700}
+.w-tab.file{background:rgba(0,0,0,.2)}
+.w-rib{background:var(--ribbon);display:flex;flex-wrap:wrap;min-height:84px;border-bottom:1px solid var(--ribbon-line)}
+.w-grp{padding:6px 10px 3px;border-right:1px solid var(--ribbon-line);border-bottom:1px solid var(--ribbon-line);display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.w-cmds{display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start;max-width:210px}
+.w-cmd{background:var(--card);border:1px solid var(--ribbon-line);border-radius:3px;padding:2px 6px;font-size:11px;white-space:nowrap;color:var(--ink)}
+.w-glabel{font-size:10.5px;text-align:center;color:var(--muted);margin-top:4px;white-space:nowrap}
+.w-body{display:flex;height:150px}
+.w-doc{flex:1;display:grid;place-items:start center;padding:10px;overflow:hidden}
+.w-page{background:var(--page);color:var(--page-ink);width:70%;min-width:260px;padding:14px 18px;height:200px;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.w-page h4{font-family:Georgia,serif;margin:0 0 6px;font-size:16px;text-align:center}
+.w-page p{font-family:Georgia,serif;font-size:11.5px;margin:0;line-height:1.5}
+.w-scroll{width:16px;background:var(--ribbon);border-left:1px solid var(--ribbon-line);padding:3px 3px}
+.w-scroll i{display:block;height:48px;background:var(--key-line);border-radius:2px}
+.w-status{display:flex;gap:18px;align-items:center;background:var(--ribbon);border-top:1px solid var(--ribbon-line);padding:3px 10px;font-size:11.5px}
+.w-status .sp{flex:1}
+.w-status span[data-part]{padding:2px 6px}
+.zoomctl{display:inline-flex;gap:6px;align-items:center}
+.zoomctl i{display:block;width:70px;height:2px;background:var(--muted);position:relative}
+.zoomctl i::after{content:"";position:absolute;left:50%;top:-4px;width:4px;height:10px;background:var(--ink)}
+.win .pinned{outline:2px solid var(--hi);outline-offset:-2px}
+.pin{position:absolute;right:6px;bottom:3px;background:var(--hi);color:var(--hi-ink);font:700 11px var(--f-b);font-style:normal;padding:1px 7px;border-radius:3px;pointer-events:none;z-index:3;white-space:nowrap}
+.w-title .pin{bottom:auto;top:3px;right:auto;left:40%}
+.w-tabs-wrap{position:relative}
+
+/* imagine + mânere */
+.docmock{background:var(--win-gray);border-radius:8px;padding:18px 20px;display:grid;justify-items:center;gap:12px}
+.docpage{background:var(--page);width:min(100%,430px);padding:22px 26px 26px;display:grid;gap:10px;justify-items:center;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.docpage .ln{width:100%;display:grid;gap:5px}
+.docpage .ln i{display:block;height:6px;background:#c8ccd4;border-radius:3px}
+.docpage .ln i.s{width:62%}
+.picwrap{padding:26px 28px}
+.picbox{position:relative;width:240px;height:150px;outline:2px solid #1f6feb;outline-offset:0}
+.picbox svg.scene{display:block;width:100%;height:100%}
+.hd{position:absolute;width:15px;height:15px;background:#fff;border:2px solid #1f6feb;border-radius:50%;padding:0;transform:translate(-50%,-50%)}
+.hd:hover,.hd.hot{background:var(--hi)}
+.hd.ok{background:#3ecf8e}
+.hd.rot{left:50%;top:-22px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%}
+.hd.rot svg,.hd.wrap svg{width:13px;height:13px}
+.hd.wrap{left:calc(100% + 24px);top:6px;width:24px;height:24px;border-radius:4px;display:grid;place-items:center}
+.hd.h{left:100%;top:50%}.hd.v{left:50%;top:100%}
+.hd.p.a{left:0;top:0}.hd.p.b{left:100%;top:0}.hd.p.c{left:0;top:100%}.hd.p.d{left:100%;top:100%}
+.hd.side{border-radius:4px}
+
+/* formatare */
+.editor{border:1px solid var(--ribbon-line);border-radius:8px;overflow:hidden;background:var(--win-gray);box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.tb{display:flex;flex-wrap:wrap;background:var(--ribbon);border-bottom:1px solid var(--ribbon-line);padding:6px 6px 0}
+.tgrp{padding:2px 10px 4px;border-right:1px solid var(--ribbon-line);display:flex;flex-direction:column;gap:3px;align-items:center}
+.tgrp:last-child{border-right:0}
+.tgrp>span{font-size:10.5px;color:var(--muted)}
+.trow{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.tbtn{min-width:34px;height:34px;background:var(--card);color:var(--ink);border:1.5px solid var(--ribbon-line);border-radius:5px;display:grid;place-items:center;padding:0 7px;font-family:Georgia,serif;font-size:1rem}
+.tbtn:hover{border-color:var(--blue);background:var(--key)}
+.tbtn .hlico{background:#ffe14d;color:#222;padding:0 4px;font-family:var(--f-b);font-weight:700;font-size:.8rem}
+.tbtn .colico{color:#c0392b;font-weight:800;font-family:var(--f-b);border-bottom:3px solid #c0392b;line-height:1}
+.tbtn.undo{font-family:var(--f-b);font-size:.85rem;font-weight:600}
+.tbtn svg{width:16px;height:14px}
+.canvas{padding:14px;display:grid;place-items:start center}
+.page{background:var(--page);color:var(--page-ink);width:min(100%,640px);padding:22px 26px;font-family:Georgia,"Times New Roman",serif;font-size:1.02rem;line-height:1.6;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.page .blk{margin:0 0 .6em;cursor:text;padding:2px 4px;border-radius:2px}
+.page h2.blk{font-size:1.6rem;margin-bottom:.4em}
+.page .w{cursor:text;border-radius:2px}
+.page .blk:hover,.page .w:hover{background:rgba(31,111,235,.1)}
+.page .sel{background:#b4d5fe !important;outline:1px solid #1f6feb}
+.page .b{font-weight:700}.page .i{font-style:italic}.page .u{text-decoration:underline}.page .s{text-decoration:line-through}
+.page .sub{vertical-align:sub;font-size:.72em}.page .sup{vertical-align:super;font-size:.72em}
+.page .hl{background:#ffe14d}.page .col{color:#c0392b}
+.page .al-l{text-align:left}.page .al-c{text-align:center}.page .al-r{text-align:right}.page .al-j{text-align:justify}
+.page .list{display:list-item;list-style:disc;margin-left:1.5em}
+
+/* greșeli */
+.passage{background:var(--page);color:var(--page-ink);font-family:Georgia,serif;font-size:1.15rem;line-height:2.1;padding:18px 20px;border-radius:8px;border:2px solid var(--line)}
+.tok{display:inline;background:transparent;border:0;border-radius:4px;padding:2px 1px;font:inherit;color:inherit;white-space:pre-wrap;cursor:pointer}
+.tok:hover{background:rgba(255,225,77,.55)}
+.tok.mark{background:#ffe14d;text-decoration:underline wavy #d33;text-underline-offset:4px}
+.tok.hit{background:#c9f0da;text-decoration:none;outline:2px solid #1b8a54}
+.tok.miss{background:#ffd9d6;outline:2px dashed #c0392b}
+.tok.fals{background:#e5e5e5;text-decoration:line-through}
+.hunt-bar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.why{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:.95rem}
+.why li{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:.5em .8em}
+.why code{font-family:var(--f-m);background:var(--key);padding:0 .35em;border-radius:3px}
+
+/* rebus */
+.rb{display:grid;gap:14px}
+.rbrow{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:8px;min-width:0}
+.rbrow.done{border-color:var(--good)}
+.rbtop{display:flex;gap:12px;align-items:center}
+.rbnum{font-family:var(--f-d);font-weight:800;font-size:1.4rem;width:1.6em;color:var(--blue)}
+.cells{display:grid;grid-template-columns:repeat(9,30px);gap:3px}
+.cell{width:30px;height:30px;border:2px solid transparent;border-radius:3px;display:grid;place-items:center;font-family:var(--f-m);font-weight:700;font-size:1.05rem;color:var(--page-ink)}
+.cell.on{background:var(--page);border-color:var(--ink)}
+.cell.key{background:var(--hi);color:var(--hi-ink);border-color:var(--ink)}
+.cells{overflow-x:auto;padding-bottom:2px}
+.rbclue{font-size:.95rem;color:var(--muted)}
+.rbin{display:flex;gap:8px;flex-wrap:wrap}
+.rbin input{flex:1;min-width:140px;font:inherit;padding:.5em .7em;border:2px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);text-transform:uppercase;letter-spacing:.1em}
+.rbmsg{font-size:.88rem;color:var(--bad);min-height:1.2em}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.vert{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.vert .cell{width:44px;height:44px;font-size:1.5rem;background:var(--hi);color:var(--hi-ink);border-color:var(--ink);animation:pop .4s both}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+
+/* rezultate + diplomă */
+.res{display:grid;gap:16px;justify-items:start;margin-top:4vh;max-width:620px}
+.res .big{display:flex;gap:8px}
+.res .big svg{width:60px;height:60px;fill:none;stroke:var(--key-line);stroke-width:1.5}
+.res .big svg.on{fill:var(--hi);stroke:#b89a00;animation:pop .5s both}
+.res .big svg:nth-child(2){animation-delay:.15s}.res .big svg:nth-child(3){animation-delay:.3s}
+.res h2{font-size:clamp(1.8rem,6vw,2.8rem);font-weight:800}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.recap{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:12px 14px;color:var(--muted)}
+.dip{background:var(--card);color:var(--ink);border:3px double var(--blue);outline:2px solid var(--blue);outline-offset:6px;border-radius:6px;padding:clamp(20px,5vw,48px);text-align:center;display:grid;gap:12px;max-width:720px;margin:24px auto}
+.dip small{font-family:var(--f-m);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.dip h2{font-size:clamp(1.8rem,7vw,3rem);font-weight:800}
+.dip .nm{font-family:var(--f-d);font-weight:800;font-size:clamp(2rem,8vw,3.4rem);background:linear-gradient(transparent 62%,var(--hi) 62%);justify-self:center;padding-inline:.2em;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+<div id="app"></div>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var app=$('#app');
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function sum(a){return a.reduce(function(x,y){return x+y},0)}
+function norm(s){return String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim()}
+
+/* ---------- progres ---------- */
+var KEY='misiunea-word-v1';
+var S={name:'',best:[0,0,0,0,0,0,0],stars:[0,0,0,0,0,0,0]};
+try{var raw=JSON.parse(localStorage.getItem(KEY));if(raw&&raw.best&&raw.stars){S=raw}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var TOT=[9,10,10,8,12,15,5], MAXXP=sum(TOT)*10;
+function rankOf(xp){var r=xp/MAXXP;return r>=.88?'Maestru Word':r>=.65?'Expert Word':r>=.42?'Tehnoredactor':r>=.18?'Utilizator':'Începător'}
+function starSvg(on){return '<svg viewBox="0 0 24 24" class="'+(on?'on':'')+'"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z" stroke-linejoin="round"/></svg>'}
+function stars(n,cls){var h='';for(var i=0;i<3;i++)h+=starSvg(i<n);return '<div class="'+(cls||'stars')+'" aria-label="'+n+' din 3 stele">'+h+'</div>'}
+function keys(s){return s.split('+').map(function(k){return '<kbd>'+k+'</kbd>'}).join('<span class="plus">+</span>')}
+
+/* ---------- ecrane ---------- */
+function clearKeys(){document.onkeydown=null}
+function start(){
+  clearKeys();
+  app.innerHTML='<div class="wrap start"><div class="brand">Informatică · clasa a VII-a</div>'+
+  '<h1>Misiunea <mark>Word</mark></h1>'+
+  '<p class="lead">Șapte misiuni din Unitatea 1: tehnoredactare și Microsoft Word. Găsești părțile ferestrei, alegi filele potrivite, formatezi un text adevărat și rezolvi un rebus.</p>'+
+  '<form class="namebox" id="nf"><input id="nm" autocomplete="off" maxlength="30" placeholder="Cum te cheamă?" value="'+(S.name||'').replace(/"/g,'')+'" aria-label="Numele tău"><button class="btn" type="submit">'+(S.name?'Continuă':'Începe')+'</button></form>'+
+  '<ul class="facts"><li>7 misiuni</li><li>69 de întrebări</li><li>stele și puncte XP</li><li>diplomă la final</li></ul></div>';
+  $('#nf').onsubmit=function(e){e.preventDefault();S.name=$('#nm').value.trim()||'Elev';save();hub()};
+  $('#nm').focus();
+}
+var LV=[
+ {t:'Harta ferestrei',d:'Găsește părțile ferestrei Word: bara de titlu, panglica, bara de stare.',r:'Fereastra Word: A bara de titlu, B panglica, C zona documentului, D bara de defilare, E bara de stare.',run:lvl1},
+ {t:'Panglica pe file',d:'În ce filă se ascunde fiecare comandă? Explorează panglica.',r:'Pornire, Inserare, Desenare, Proiectare, Aspect, Referințe, Corespondență, Revizuire, Vizualizare, Ajutor.',run:lvl2},
+ {t:'Scurtături de tastatură',d:'Ctrl și încă o tastă. Alege combinația potrivită.',r:'Ctrl+S salvează, Ctrl+Z anulează, Ctrl+B / I / U formatează, Ctrl+L / E / R / J aliniază.',run:lvl3},
+ {t:'Atelierul de formatare',d:'Formatezi un text real într-un Word în miniatură.',r:'Selectezi întâi, apoi alegi comanda: la nivel de caracter (Font) sau de paragraf (Paragraf).',run:lvl4},
+ {t:'Imagini și tabele',d:'Mânerele unei imagini și filele care apar când selectezi un obiect.',r:'Selectezi imaginea și apare fila Format imagine; selectezi tabelul și apar Proiectare tabel și Aspect.',run:lvl5},
+ {t:'Vânătorul de greșeli',d:'Găsește greșelile de tehnoredactare, apoi spune ce reguli știi.',r:'Un singur spațiu, semnele de punctuație se lipesc de cuvântul anterior, diacritice, puține fonturi.',run:lvl6},
+ {t:'Rebusul Tabel',d:'Rezolvă rebusul cu termeni din lecție. Pe verticală apare o surpriză.',r:'Rebusul din lecție se face în Word, cu un tabel și definiții.',run:lvl7}
+];
+function hub(){
+  clearKeys();
+  var xp=sum(S.best), done=S.stars.every(function(s){return s>0});
+  app.innerHTML='<div class="wrap"><header class="bar"><div class="brand">Misiunea <i>Word</i></div><div class="xp">'+(S.name||'Elev')+' · <b>'+xp+' XP</b></div></header>'+
+  '<h1 class="h1">Harta misiunilor</h1>'+
+  '<div class="rankline"><span class="pill">'+rankOf(xp)+'</span><span class="lead" style="font-size:1rem">Alege orice misiune. Poți reveni ca să strângi mai multe stele.</span></div>'+
+  '<div class="hubgrid">'+LV.map(function(l,i){return '<button class="lcard" data-i="'+i+'"><span class="n">'+(i+1)+'</span><h3>'+l.t+'</h3><p>'+l.d+'</p>'+stars(S.stars[i])+'</button>'}).join('')+'</div>'+
+  '<div class="row">'+(done?'<button class="btn" id="dp">Primește diploma</button>':'')+'<button class="btn ghost" id="rs">Schimbă elevul</button></div></div>';
+  $$('.lcard').forEach(function(b){b.onclick=function(){LV[+b.dataset.i].run()}});
+  if(done)$('#dp').onclick=diploma;
+  $('#rs').onclick=function(){S={name:'',best:[0,0,0,0,0,0,0],stars:[0,0,0,0,0,0,0]};save();start()};
+  window.scrollTo(0,0);
+}
+function diploma(){
+  var xp=sum(S.best), d=new Date().toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'});
+  app.innerHTML='<div class="wrap"><div class="dip"><small>Informatică · clasa a VII-a · Unitatea 1</small><h2>Diplomă de tehnoredactor</h2><p>acordată lui</p><div class="nm">'+(S.name||'Elev')+'</div>'+
+  '<p>pentru că a terminat toate cele 7 misiuni Word cu <b>'+xp+' din '+MAXXP+' XP</b> și titlul de</p><h3>'+rankOf(xp)+'</h3>'+stars(Math.round(sum(S.stars)/7),'stars big2')+'<small>'+d+'</small></div>'+
+  '<div class="row" style="justify-content:center"><button class="btn" id="bk">Înapoi la hartă</button></div></div>';
+  $('#bk').onclick=hub;
+}
+
+/* ---------- motor de nivel ---------- */
+function shell(idx){
+  clearKeys();
+  app.innerHTML='<div class="wrap"><header class="bar"><button class="btn ghost sm" id="back">← Harta</button><div class="crumb">Nivelul '+(idx+1)+' · '+LV[idx].t+'</div><div class="xp"><b>'+sum(S.best)+'</b> XP</div></header>'+
+  '<div class="prog"><i id="pf"></i></div>'+
+  '<section class="mission"><span class="tag">Misiune</span><p id="pr"></p></section>'+
+  '<div id="stage" class="stage"></div><div id="fb" class="fb" role="status" aria-live="polite" hidden></div>'+
+  '<div class="actions"><button class="btn" id="next" hidden></button></div></div>';
+  $('#back').onclick=hub;window.scrollTo(0,0);
+}
+function play(idx,items,renderItem,setup){
+  shell(idx);
+  var R={ok:0,fail:0,total:items.reduce(function(a,x){return a+(x.w||1)},0)};
+  var stage=$('#stage'),fb=$('#fb'),next=$('#next'),pr=$('#pr'),pf=$('#pf');
+  var i=0;
+  if(setup)setup(stage);
+  function show(){
+    fb.hidden=true;next.hidden=true;
+    pf.style.width=(i/items.length*100)+'%';
+    var tried=false,fin=false;
+    var it=items[i];
+    function reveal(cls,html){fb.className='fb '+cls;fb.innerHTML=html;fb.hidden=false}
+    function ready(){next.hidden=false;next.textContent=(i===items.length-1)?'Vezi rezultatul →':'Continuă →';next.focus()}
+    var api={stage:stage,
+      prompt:function(h){pr.innerHTML=h},
+      hint:function(h){reveal('hint',h)},
+      right:function(msg){if(fin)return;fin=true;if(!tried)R.ok+=(it.w||1);tried=true;reveal('good','<b>Corect!</b> '+(msg||''));ready()},
+      wrong:function(msg){if(fin)return;if(!tried){R.fail++;tried=true}reveal('bad','<b>Încă nu.</b> '+(msg||'Mai încearcă.'))},
+      partial:function(n,html){if(fin)return;fin=true;tried=true;R.ok+=n;reveal('good',html);ready()}
+    };
+    if(!setup)stage.innerHTML='';
+    renderItem(it,api,i);
+  }
+  next.onclick=function(){i++;if(i>=items.length){pf.style.width='100%';results(idx,R)}else{show();window.scrollTo(0,0)}};
+  show();
+}
+function mcq(api,it){
+  var opts=shuffle(it.o.map(function(t,k){return {t:t,ok:k===0}}));
+  api.stage.innerHTML='<div class="opts">'+opts.map(function(o,k){return '<button class="opt" data-k="'+k+'">'+o.t+'</button>'}).join('')+'</div>';
+  var done=false;
+  $$('.opt',api.stage).forEach(function(b,k){b.onclick=function(){
+    if(done)return;
+    if(opts[k].ok){done=true;b.classList.add('ok');$$('.opt',api.stage).forEach(function(x){x.disabled=true});api.right(it.fact)}
+    else{b.classList.add('no');b.disabled=true;api.wrong(it.hint||'Nu este varianta aceasta. Încearcă alta.')}
+  }});
+}
+function results(idx,R){
+  var ratio=R.ok/R.total, n=ratio>=.9?3:ratio>=.6?2:1, gain=R.ok*10;
+  S.best[idx]=Math.max(S.best[idx],gain);S.stars[idx]=Math.max(S.stars[idx],n);save();
+  var msg=n===3?'Perfect! Ești gata de concurs.':n===2?'Foarte bine! Mai încearcă o dată pentru trei stele.':'Ai terminat misiunea. Rejoacă pentru mai multe stele.';
+  var all=S.stars.every(function(s){return s>0});
+  app.innerHTML='<div class="wrap"><header class="bar"><div class="brand">Misiunea <i>Word</i></div><div class="xp"><b>'+sum(S.best)+'</b> XP</div></header>'+
+  '<div class="res">'+stars(n,'big')+'<h2>'+msg+'</h2><p class="lead">Din prima ai răspuns corect la <b>'+R.ok+' din '+R.total+'</b>. Ai câștigat <b>'+gain+' XP</b>.</p>'+
+  '<div class="recap"><b>Reține:</b> '+LV[idx].r+'</div>'+
+  '<div class="row"><button class="btn" id="nx">'+(idx<LV.length-1?'Misiunea următoare →':all?'Primește diploma':'Harta')+'</button><button class="btn ghost" id="rp">Joacă din nou</button><button class="btn ghost" id="hb">Harta</button></div></div></div>';
+  $('#nx').onclick=function(){if(idx<LV.length-1)LV[idx+1].run();else if(all)diploma();else hub()};
+  $('#rp').onclick=function(){LV[idx].run()};$('#hb').onclick=hub;window.scrollTo(0,0);
+}
+
+/* ---------- nivel 1: harta ferestrei ---------- */
+var NAMES={titlu:'Bara de titlu',acces:'Bara de acces rapid',cautare:'Căutare Microsoft',panglica:'Panglica',zona:'Zona documentului',defilare:'Bara de defilare',stare:'Bara de stare',cuvinte:'Numărul de cuvinte',zoom:'Zoom',pagina:'Pagina curentă',limba:'Limba textului'};
+var IC={save:'<svg viewBox="0 0 16 16"><path d="M2 2h9l3 3v9H2z" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="5" y="2" width="5" height="4" fill="currentColor"/><rect x="4.5" y="9" width="7" height="4.5" fill="none" stroke="currentColor"/></svg>',
+ undo:'<svg viewBox="0 0 16 16"><path d="M5 4 2 7l3 3M2 7h7a4 4 0 010 8H6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ redo:'<svg viewBox="0 0 16 16" style="transform:scaleX(-1)"><path d="M5 4 2 7l3 3M2 7h7a4 4 0 010 8H6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ search:'<svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg>'};
+var TABS=['Pornire','Inserare','Desenare','Proiectare','Aspect','Referințe','Corespondență','Revizuire','Vizualizare','Ajutor'];
+var RIB={
+ 'Pornire':{b:'Comenzile de bază pentru editare și formatare.',g:{'Clipboard':['Lipire','Copiere','Decupare','Descriptor de formate'],'Font':['Tip literă','Aldin','Cursiv','Subliniat','Culoare text'],'Paragraf':['Marcatori','Numerotare','Aliniere','Spațiere'],'Stiluri':['Titlu','Normal'],'Editare':['Găsire','Înlocuire'],'Voce':['Dictare'],'Editor':['Ortografie']}},
+ 'Inserare':{b:'Adaugă elemente noi în document: tabele, imagini, antet, simboluri.',g:{'Pagini':['Copertă','Pagină necompletată','Sfârșit de pagină'],'Tabele':['Tabel'],'Ilustrații':['Imagini','Forme','Pictograme','SmartArt','Diagramă'],'Media':['Videoclipuri online'],'Linkuri':['Hiperlink','Comentariu'],'Antet și subsol':['Antet','Subsol','Număr de pagină'],'Text':['Casetă text','Literă capitulară'],'Simboluri':['Ecuație','Simbol']}},
+ 'Desenare':{b:'Instrumente de desen, utile mai ales pe ecrane tactile.',g:{'Instrumente':['Marker','Creion','Lasou'],'Riglă':['Riglă'],'Conversie':['Cerneală în formă','Cerneală în expresie matematică'],'Inserare':['Planșă pentru desen'],'Reproducere':['Redare cerneală']}},
+ 'Proiectare':{b:'Aspectul general și profesionist al documentului.',g:{'Teme':['Teme'],'Formatare document':['Stiluri titluri','Culori','Fonturi','Efecte','Spațiere paragraf'],'Fundal pagină':['Inscripționare','Culoare pagină','Borduri de pagină']}},
+ 'Aspect':{b:'Configurează pagina și așezarea obiectelor pe ea.',g:{'Inițializare pagină':['Margini','Orientare','Dimensiune','Coloane','Întreruperi','Numere de linie','Despărțire în silabe'],'Paragraf':['Indentare stânga','Indentare dreapta','Spațiere înainte','Spațiere după'],'Aranjare':['Poziție','Încadrare text','Aducere în plan','Aliniere','Grupare','Rotire']}},
+ 'Referințe':{b:'Cuprins, note de subsol, bibliografie și legende.',g:{'Cuprins':['Cuprins'],'Note de subsol':['Inserare notă de subsol'],'Cercetare':['Căutare'],'Referințe și bibliografie':['Inserare referință','Stil citare','Bibliografie'],'Legende':['Inserare legendă','Marcare intrare index']}},
+ 'Corespondență':{b:'Trimiterea corespondenței în masă: plicuri, etichete, scrisori tip.',g:{'Creare':['Plicuri','Etichete'],'Pornire îmbinare':['Selectare destinatari'],'Scriere și inserare câmpuri':['Bloc adresă','Linie de salut'],'Examinare rezultate':['Previzualizare rezultate'],'Terminare':['Finalizare și îmbinare']}},
+ 'Revizuire':{b:'Verificare, colaborare și urmărirea modificărilor.',g:{'Verificare':['Ortografie și gramatică','Lexicon','Contor de cuvinte'],'Vorbire':['Citire cu voce tare'],'Accesibilitate':['Verificare accesibilitate'],'Limbă':['Limbă','Comentariu nou'],'Urmărire':['Urmărire modificări','Acceptare','Respingere'],'Comparare':['Comparare'],'Protejare':['Restricționare editare']}},
+ 'Vizualizare':{b:'Cum afișezi documentul pe ecran: moduri, riglă, zoom, ferestre.',g:{'Vizualizări':['Mod citire','Aspect pagină imprimată','Aspect Web'],'Imersiv':['Focalizare','Immersive Reader'],'Deplasarea paginilor':['Vertical','Față în față'],'Afișare':['Riglă','Linii de grilă','Panou de navigare'],'Zoom':['Zoom','100%','O pagină'],'Fereastră':['Fereastră nouă','Aranjați tot'],'Macrocomenzi':['Macrocomenzi']}},
+ 'Ajutor':{b:'Ultima filă: căutarea de ajutor pentru utilizarea programului.',g:{'Ajutor':['Ajutor']}}
+};
+function ribbonHTML(tab){
+  var g=RIB[tab].g;
+  return Object.keys(g).map(function(k){return '<div class="w-grp"><div class="w-cmds">'+g[k].map(function(c){return '<span class="w-cmd">'+c+'</span>'}).join('')+'</div><div class="w-glabel">'+k+'</div></div>'}).join('');
+}
+function winHTML(){
+  return '<div class="winscroll"><div class="win">'+
+  '<div class="w-title" data-part="titlu"><div class="w-qa" data-part="acces">'+IC.save+IC.undo+IC.redo+'</div><div class="w-name">Document1 – Word</div>'+
+  '<div class="w-search" data-part="cautare">'+IC.search+'<span>Căutare</span></div><div class="w-acct">AP</div><div class="w-ctl">–▢✕</div></div>'+
+  '<div data-part="panglica"><div class="w-tabs"><button class="w-tab file" tabindex="-1">Fișier</button>'+TABS.map(function(t,k){return '<button class="w-tab'+(k===0?' act':'')+'" tabindex="-1">'+t+'</button>'}).join('')+'</div><div class="w-rib">'+ribbonHTML('Pornire')+'</div></div>'+
+  '<div class="w-body"><div class="w-doc" data-part="zona"><div class="w-page"><h4>Toamna în parc</h4><p>Frunzele devin galbene, iar copacii își pierd podoabele. Este un anotimp important pentru natură. Aici scrii și editezi documentul.</p></div></div><div class="w-scroll" data-part="defilare"><i></i></div></div>'+
+  '<div class="w-status" data-part="stare"><span data-part="pagina">Pagina 1 din 1</span><span data-part="cuvinte">24 de cuvinte</span><span data-part="limba">Română</span><span class="sp"></span><span data-part="zoom" class="zoomctl">− <i></i> + &nbsp;100%</span></div>'+
+  '</div></div>';
+}
+var L1=[
+ {p:'titlu',q:'Unde este <b>Bara de titlu</b>? Ține numele fișierului și butoanele ferestrei.',f:'Bara de titlu conține bara de acces rapid, numele fișierului, căutarea, contul și butoanele ferestrei.'},
+ {p:'panglica',q:'Click pe <b>Panglică</b> (Ribbon): comenzile grupate pe file.',f:'Panglica grupează comenzile pe file, iar fiecare filă are grupuri logice de comenzi.'},
+ {p:'zona',q:'Unde <b>scrii efectiv</b> textul documentului? Click pe <b>Zona documentului</b>.',f:'Zona documentului este zona de lucru în care editezi.'},
+ {p:'defilare',q:'Găsește <b>bara de defilare</b>, cea care mută aria de afișare în sus și în jos.',f:'Bara de defilare mută aria de afișare pe verticală sau pe orizontală.'},
+ {p:'stare',q:'Click pe <b>Bara de stare</b>, aflată în partea de jos a ferestrei.',f:'Bara de stare arată pagina, numărul de cuvinte, limba, modurile de vizualizare și zoomul.'},
+ {p:'acces',q:'Unde sunt butoanele <b>Salvare, Anulare și Refacere</b>? Caută <b>Bara de acces rapid</b>.',f:'Bara de acces rapid: Salvare (Ctrl+S), Anulare (Ctrl+Z), Refacere. Poți adăuga și alte comenzi.'},
+ {p:'cautare',q:'Vrei să găsești rapid o comandă sau un text (<kbd>Alt</kbd>+<kbd>G</kbd>). Click pe <b>Căutare Microsoft</b>.',f:'Căutare Microsoft găsește texte, acțiuni sau informații despre un cuvânt.'},
+ {p:'cuvinte',q:'Unde vezi <b>numărul de cuvinte</b> din document?',f:'Un click pe numărul de cuvinte deschide statistica: pagini, cuvinte, caractere, paragrafe, linii.'},
+ {p:'zoom',q:'Unde <b>mărești sau micșorezi</b> afișarea paginii? Caută <b>Zoom</b> în bara de stare.',f:'Panorama (Zoom) are butoane + și −, potențiometru și procentul curent.'}
+];
+function lvl1(){
+  var handler=null;
+  play(0,shuffle(L1),function(it,api){
+    api.prompt(it.q);
+    var done=false;
+    handler=function(e){
+      if(done)return;
+      var t=e.target.closest('[data-part]');if(!t)return;
+      if(t.closest('[data-part="'+it.p+'"]')){
+        done=true;
+        var el=api.stage.querySelector('[data-part="'+it.p+'"]');
+        el.classList.add('pinned');var em=document.createElement('em');em.className='pin';em.textContent=NAMES[it.p];el.appendChild(em);
+        api.right('<b>'+NAMES[it.p]+'.</b> '+it.f);
+      }else{api.wrong('Ai apăsat pe <b>'+NAMES[t.dataset.part]+'</b>. Mai caută.')}
+    };
+  },function(stage){stage.innerHTML=winHTML();stage.addEventListener('click',function(e){if(handler)handler(e)})});
+}
+
+/* ---------- nivel 2: panglica ---------- */
+var L2=[
+ {q:'Vrei să <b>inserezi un tabel</b>.',a:'Inserare'},
+ {q:'Vrei să schimbi <b>marginile</b> și <b>orientarea</b> paginii (Portret / Vedere).',a:'Aspect'},
+ {q:'Vrei să creezi automat un <b>cuprins</b> pe baza titlurilor.',a:'Referințe'},
+ {q:'Vrei să <b>urmărești modificările</b> (Track Changes) făcute de colegi.',a:'Revizuire'},
+ {q:'Vrei să aplici o <b>temă</b> cu culori și fonturi armonizate, plus o <b>culoare a paginii</b>.',a:'Proiectare'},
+ {q:'Vrei să afișezi <b>rigla</b> și <b>liniile de grilă</b>.',a:'Vizualizare'},
+ {q:'Vrei să pregătești <b>plicuri și etichete</b> pentru scrisori.',a:'Corespondență'},
+ {q:'Vrei să pui textul <b>Aldin</b> și să alegi tipul de literă.',a:'Pornire'},
+ {q:'Vrei să transformi un <b>desen făcut de mână</b> într-o formă curată.',a:'Desenare'},
+ {q:'Nu știi cum se face ceva în Word și cauți <b>informații de ajutor</b>.',a:'Ajutor'}
+];
+function lvl2(){
+  var handler=null;
+  play(1,shuffle(L2),function(it,api){
+    api.prompt(it.q+' În ce <b>filă</b> găsești comanda?');
+    var done=false;
+    handler=function(tab){
+      $$('.w-tab',api.stage).forEach(function(b){b.classList.toggle('act',b.dataset.t===tab)});
+      $('.w-rib',api.stage).innerHTML=ribbonHTML(tab);
+      if(done)return;
+      if(tab===it.a){done=true;api.right('Fila <b>'+tab+'</b>: '+RIB[tab].b)}
+      else api.wrong('Fila <b>'+tab+'</b> are altă treabă: '+RIB[tab].b+' Verifică panglica de mai jos și încearcă altă filă.');
+    };
+  },function(stage){
+    stage.innerHTML='<div class="winscroll"><div class="win"><div class="w-tabs"><button class="w-tab file" tabindex="-1" data-t="Fișier">Fișier</button>'+TABS.map(function(t,k){return '<button class="w-tab'+(k===0?' act':'')+'" data-t="'+t+'">'+t+'</button>'}).join('')+'</div><div class="w-rib" style="min-height:96px">'+ribbonHTML('Pornire')+'</div></div></div>';
+    $$('.w-tab',stage).forEach(function(b){b.onclick=function(){
+      if(b.dataset.t==='Fișier'){$('#fb').hidden=false;$('#fb').className='fb hint';$('#fb').innerHTML='Fila <b>Fișier</b> deschide vizualizarea Backstage: Nou, Deschidere, Salvare, Imprimare, Partajare. Alege una dintre cele 10 file din panglică.';return}
+      if(handler)handler(b.dataset.t)}});
+  });
+}
+
+/* ---------- nivel 3: scurtături ---------- */
+var SC=[['Ctrl+S','Salvare'],['Ctrl+N','Document nou'],['Ctrl+O','Deschidere'],['Ctrl+Z','Anulare'],['Ctrl+C','Copiere'],['Ctrl+X','Decupare'],['Ctrl+V','Lipire'],['Ctrl+B','Aldin (Bold)'],['Ctrl+I','Cursiv (Italic)'],['Ctrl+U','Subliniere'],['Ctrl+L','Aliniere la stânga'],['Ctrl+E','Centrare'],['Ctrl+R','Aliniere la dreapta'],['Ctrl+J','Aliniere stânga-dreapta'],['F12','Salvare ca']];
+function lvl3(){
+  var pick=shuffle(SC).slice(0,10);
+  var items=pick.map(function(p,n){
+    var others=shuffle(SC.filter(function(x){return x!==p})).slice(0,3);
+    if(n%2===0)return {q:'Ce face scurtătura '+keys(p[0])+'?',o:[p[1]].concat(others.map(function(x){return x[1]})),fact:keys(p[0])+' înseamnă <b>'+p[1]+'</b>.'};
+    return {q:'Care este scurtătura pentru <b>'+p[1]+'</b>?',o:[keys(p[0])].concat(others.map(function(x){return keys(x[0])})),fact:'<b>'+p[1]+'</b> se face cu '+keys(p[0])+'.'};
+  });
+  play(2,items,function(it,api){api.prompt(it.q);mcq(api,it)});
+}
+
+/* ---------- nivel 4: atelier de formatare ---------- */
+var DOC='<h2 class="blk" data-id="titlu">Toamna în parc</h2>'+
+'<p class="blk" data-id="p1">Frunzele devin <span class="w" data-id="galbene">galbene</span>, iar copacii își pierd podoabele. Este un anotimp <span class="w" data-id="important">important</span> pentru natură.</p>'+
+'<p class="blk" data-id="p2">Suprafața parcului este de 500 m<span class="w" data-id="doi">2</span>.</p>'+
+'<p class="blk" data-id="p3">Apa de ploaie are formula chimică H<span class="w" data-id="ho">2</span>O.</p>'+
+'<p class="blk" data-id="p4">Reține: un document are un aspect <span class="w" data-id="unitar">unitar</span> când folosești puține fonturi și le păstrezi de la un capăt la altul, fără să le amesteci între ele.</p>'+
+'<p class="blk" data-id="p5">Aldin, Cursiv, Subliniat</p>';
+var T4=[
+ {p:'Selectează <b>titlul</b> (click pe el) și <b>centrează-l</b>.',w:[['titlu','al-c']],f:'Centrare: grupul Paragraf din Pornire, sau <kbd>Ctrl</kbd>+<kbd>E</kbd>.'},
+ {p:'Selectează cuvântul <b>galbene</b> și fă-l <b>Aldin</b>.',w:[['galbene','b']],f:'Aldin (Bold): grupul Font, sau <kbd>Ctrl</kbd>+<kbd>B</kbd>.'},
+ {p:'Pune cuvântul <b>important</b> în <b>cursiv</b>.',w:[['important','i']],f:'Cursiv (Italic): <kbd>Ctrl</kbd>+<kbd>I</kbd>.'},
+ {p:'Suprafața se măsoară în m². Selectează cifra <b>2</b> de la „m2” și fă-o <b>exponent</b> (butonul x²).',w:[['doi','sup']],f:'Exponent (Superscript): litere mici sus-dreapta, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>+</kbd>.'},
+ {p:'În formula apei, cifra <b>2</b> de la „H2O” este <b>indice</b>. Selecteaz-o și apasă x₂.',w:[['ho','sub']],f:'Indice (Subscript): litere mici jos-dreapta, <kbd>Ctrl</kbd>+<kbd>=</kbd>.'},
+ {p:'Aliniază paragraful care începe cu „Reține” <b>stânga-dreapta</b> (Justify).',w:[['p4','al-j']],f:'Aliniere stânga-dreapta: <kbd>Ctrl</kbd>+<kbd>J</kbd>. Textul se distribuie uniform pe linie.'},
+ {p:'<b>Evidențiază</b> cu markerul galben cuvântul <b>unitar</b>.',w:[['unitar','hl']],f:'Culoarea de evidențiere stă în grupul Font și colorează fundalul din spatele textului.'},
+ {p:'Transformă ultimul paragraf într-o <b>listă cu marcatori</b>.',w:[['p5','list']],f:'Marcatorii se află în grupul Paragraf. Atenție: formatarea de paragraf se aplică întregului paragraf.'}
+];
+var AL=['al-l','al-c','al-r','al-j'];
+function alIcon(t){var w=[14,9,14,9],ww=t==='j'?[14,14,14,14]:w;return '<svg viewBox="0 0 16 14">'+ww.map(function(l,k){var x=t==='c'?(16-l)/2:t==='r'?16-l:0;return '<rect x="'+x+'" y="'+(k*3.6)+'" width="'+l+'" height="1.7" fill="currentColor"/>'}).join('')+'</svg>'}
+function lvl4(){
+  var cur=null,sel=null,hist=[],doc=null;
+  function clean(){return doc.innerHTML.replace(/ ?\bsel\b/g,'')}
+  function target(id){return doc.querySelector('[data-id="'+id+'"]')}
+  function select(el){if(sel)sel.classList.remove('sel');sel=el;if(el)el.classList.add('sel')}
+  function check(){
+    if(!cur||cur.done)return;
+    var ok=cur.t.w.every(function(w){var e=target(w[0]);return e&&e.classList.contains(w[1])});
+    if(ok){cur.done=true;select(null);cur.api.right(cur.t.f)}
+  }
+  function act(c){
+    if(!cur||cur.done)return;
+    if(!sel){cur.api.hint('Mai întâi <b>selectează</b> textul: click pe un cuvânt sau pe un paragraf. Apoi alege comanda.');return}
+    var blockLevel=AL.indexOf(c)>-1||c==='list';
+    var tg=blockLevel?sel.closest('.blk'):sel;
+    hist.push(clean());
+    if(AL.indexOf(c)>-1){AL.forEach(function(a){if(a!==c)tg.classList.remove(a)})}
+    if(c==='sub')tg.classList.remove('sup');
+    if(c==='sup')tg.classList.remove('sub');
+    tg.classList.toggle(c);
+    var id=tg.dataset.id,on=tg.classList.contains(c);
+    var wanted=cur.t.w.some(function(w){return w[0]===id&&w[1]===c});
+    if(on&&!wanted)cur.api.wrong('Comanda a fost aplicată pe <b>„'+tg.textContent.slice(0,22)+(tg.textContent.length>22?'…':'')+'”</b>, dar misiunea cere altceva. Apasă <b>Anulează</b> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) și încearcă iar.');
+    check();
+  }
+  function undo(){
+    if(!hist.length||!cur||cur.done)return;
+    doc.innerHTML=hist.pop();sel=null;cur.api.hint('Modificare anulată.');
+  }
+  var items=T4.map(function(t){return {t:t}});
+  play(3,items,function(it,api){
+    api.prompt(it.t.p);cur={t:it.t,api:api,done:false};
+  },function(stage){
+    stage.innerHTML='<div class="editor"><div class="tb">'+
+     '<div class="tgrp"><div class="trow"><button class="tbtn undo" data-u="1" title="Anulare (Ctrl+Z)">↶ Anulează</button></div><span>Acțiuni</span></div>'+
+     '<div class="tgrp"><div class="trow">'+
+       '<button class="tbtn" data-a="b" title="Aldin (Ctrl+B)"><b>B</b></button>'+
+       '<button class="tbtn" data-a="i" title="Cursiv (Ctrl+I)"><i>I</i></button>'+
+       '<button class="tbtn" data-a="u" title="Subliniat (Ctrl+U)"><u>U</u></button>'+
+       '<button class="tbtn" data-a="s" title="Tăiat"><s>ab</s></button>'+
+       '<button class="tbtn" data-a="sub" title="Indice (Ctrl+=)">x<sub style="font-size:.6em">2</sub></button>'+
+       '<button class="tbtn" data-a="sup" title="Exponent (Ctrl+Shift++)">x<sup style="font-size:.6em">2</sup></button>'+
+       '<button class="tbtn" data-a="col" title="Culoarea fontului"><span class="colico">A</span></button>'+
+       '<button class="tbtn" data-a="hl" title="Culoare de evidențiere"><span class="hlico">ab</span></button>'+
+     '</div><span>Font</span></div>'+
+     '<div class="tgrp"><div class="trow">'+
+       '<button class="tbtn" data-a="list" title="Marcatori"><svg viewBox="0 0 16 14"><circle cx="2" cy="2" r="1.5" fill="currentColor"/><circle cx="2" cy="7" r="1.5" fill="currentColor"/><circle cx="2" cy="12" r="1.5" fill="currentColor"/><rect x="6" y="1" width="10" height="1.7" fill="currentColor"/><rect x="6" y="6" width="10" height="1.7" fill="currentColor"/><rect x="6" y="11" width="10" height="1.7" fill="currentColor"/></svg></button>'+
+       '<button class="tbtn" data-a="al-l" title="Aliniere la stânga (Ctrl+L)">'+alIcon('l')+'</button>'+
+       '<button class="tbtn" data-a="al-c" title="Centrare (Ctrl+E)">'+alIcon('c')+'</button>'+
+       '<button class="tbtn" data-a="al-r" title="Aliniere la dreapta (Ctrl+R)">'+alIcon('r')+'</button>'+
+       '<button class="tbtn" data-a="al-j" title="Stânga-dreapta (Ctrl+J)">'+alIcon('j')+'</button>'+
+     '</div><span>Paragraf</span></div></div>'+
+     '<div class="canvas"><div class="page" id="doc">'+DOC+'</div></div></div>';
+    doc=$('#doc',stage);
+    $$('.tbtn',stage).forEach(function(b){b.onmousedown=function(e){e.preventDefault()};b.onclick=function(){if(b.dataset.u)undo();else act(b.dataset.a)}});
+    doc.addEventListener('click',function(e){var w=e.target.closest('.w');var b=e.target.closest('.blk');if(!b)return;select(w||b);});
+    var map={b:'b',i:'i',u:'u',e:'al-c',l:'al-l',r:'al-r',j:'al-j'};
+    document.onkeydown=function(e){
+      if(!(e.ctrlKey||e.metaKey))return;
+      var k=e.key.toLowerCase();
+      if(k==='z'){e.preventDefault();undo()}
+      else if(map[k]){e.preventDefault();act(map[k])}
+    };
+  });
+}
+
+/* ---------- nivel 5: imagini și tabele ---------- */
+var HN={rot:'Mânerul de rotire: rotește imaginea în jurul centrului.',wrap:'Butonul Opțiuni de aspect: alege încadrarea față de textul din jur.',h:'Mâner lateral: mărește sau micșorează doar pe orizontală.',v:'Mâner de sus sau de jos: mărește sau micșorează doar pe verticală.',p:'Mâner de colț: redimensionează proporțional (imaginea nu se deformează).'};
+var H5=[
+ {h:'rot',q:'Care mâner <b>rotește</b> imaginea?'},
+ {h:'wrap',q:'Care buton alege <b>încadrarea imaginii față de text</b>?'},
+ {h:'h',q:'Care mâner mărește imaginea <b>doar pe orizontală</b>?'},
+ {h:'v',q:'Care mâner mărește imaginea <b>doar pe verticală</b>?'},
+ {h:'p',q:'Care mâner mărește imaginea <b>proporțional</b>, fără s-o deformeze?'}
+];
+var M5=[
+ {q:'Cum inserezi o imagine salvată pe calculatorul tău?',o:['Inserare → Imagini → Acest dispozitiv','Pornire → Font → Imagini','Revizuire → Lexicon → Imagini','Vizualizare → Zoom → Imagini'],fact:'Inserare → Imagini oferă trei surse: Acest dispozitiv, Bancă de imagini și Imagini online.'},
+ {q:'Ce filă nouă apare automat când <b>selectezi o imagine</b>?',o:['Format imagine','Corespondență','Referințe','Desenare'],fact:'Fila Format imagine apare când selectezi imaginea sau dai dublu-click pe ea.'},
+ {q:'Ce instrument <b>decupează</b> o imagine (inclusiv „la formă”)?',o:['Trunchiere (Crop)','Descriptor de formate','Spațiere paragraf','Numere de linie'],fact:'Trunchierea decupează imaginea. O găsești în grupul Dimensiune.'},
+ {q:'Unde găsești imagini de calitate foarte bună, puse <b>gratuit</b> la dispoziție de aplicație?',o:['Bancă de imagini','Acest dispozitiv','Modele 3D','Pictograme'],fact:'Banca de imagini conține imagini de calitate, gratuite.'},
+ {q:'Când selectezi un <b>tabel</b>, ce file noi apar?',o:['Proiectare tabel și Aspect','Format imagine și Ajutor','Desenare și Vizualizare','Referințe și Corespondență'],fact:'La selectarea tabelului apar Proiectare tabel (stiluri, borduri) și Aspect (rânduri, coloane, îmbinare).'},
+ {q:'Cu ce comandă <b>unești două celule</b> vecine ale unui tabel?',o:['Îmbinare celule','Scindare celule','Rând Total','Descriptor de margini'],fact:'Îmbinare celule este în fila Aspect a tabelului, grupul Îmbinare. Scindare celule face invers.'},
+ {q:'Ai folosit o imagine de pe internet care <b>nu este a ta</b>. Ce faci?',o:['Menționez sursa într-o secțiune Bibliografie','Nu spun nimic, este pe internet','Schimb culoarea imaginii','Șterg imaginea din document'],fact:'Respectarea drepturilor de autor este obligatorie: menționezi sursa în Bibliografie.'}
+];
+var SCENE='<svg class="scene" viewBox="0 0 240 150" preserveAspectRatio="none" aria-hidden="true"><rect width="240" height="150" fill="#9fd3f7"/><circle cx="190" cy="34" r="16" fill="#ffd23f"/><path d="M0 110 Q60 62 120 104 T240 92 V150 H0z" fill="#4caf6a"/><path d="M0 128 Q80 96 160 124 T240 118 V150 H0z" fill="#2e8b57"/><rect x="58" y="86" width="6" height="26" fill="#7a4b24"/><circle cx="61" cy="80" r="16" fill="#e07b2e"/><circle cx="50" cy="90" r="10" fill="#d4a017"/><circle cx="73" cy="90" r="10" fill="#c0392b"/></svg>';
+function lvl5(){
+  var items=shuffle(H5).map(function(x){return {k:'h',x:x}}).concat(shuffle(M5).map(function(x){return {k:'m',x:x}}));
+  play(4,items,function(it,api){
+    if(it.k==='m'){api.prompt(it.x.q);mcq(api,it.x);return}
+    api.prompt(it.x.q+' Click pe mânerul potrivit.');
+    api.stage.innerHTML='<div class="docmock"><div class="docpage"><div class="ln"><i></i><i></i><i class="s"></i></div><div class="picwrap"><div class="picbox">'+SCENE+
+      '<button class="hd rot" data-h="rot" aria-label="Mâner"><svg viewBox="0 0 16 16"><path d="M13 8a5 5 0 11-1.8-3.8M13 2v3.5H9.5" fill="none" stroke="#1f6feb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+      '<button class="hd wrap" data-h="wrap" aria-label="Buton"><svg viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="6" height="6" fill="#1f6feb"/><path d="M9 3h6M9 6h6M1 10h14M1 13h14" stroke="#1f6feb" stroke-width="1.5"/></svg></button>'+
+      '<button class="hd h side" data-h="h" aria-label="Mâner"></button><button class="hd v side" data-h="v" aria-label="Mâner"></button>'+
+      '<button class="hd p a" data-h="p" aria-label="Mâner"></button><button class="hd p b" data-h="p" aria-label="Mâner"></button><button class="hd p c" data-h="p" aria-label="Mâner"></button><button class="hd p d" data-h="p" aria-label="Mâner"></button>'+
+      '</div></div><div class="ln"><i></i><i></i><i class="s"></i></div></div></div>';
+    var done=false;
+    $$('.hd',api.stage).forEach(function(b){b.onclick=function(){
+      if(done)return;
+      var h=b.dataset.h;
+      if(h===it.x.h){done=true;$$('.hd[data-h="'+h+'"]',api.stage).forEach(function(x){x.classList.add('ok')});api.right(HN[h])}
+      else{api.wrong('Ai apăsat pe altceva: '+HN[h].replace(/^([^:]+):.*$/,'<b>$1</b>')+'.')}
+    }});
+  });
+}
+
+/* ---------- nivel 6: vânătorul de greșeli ---------- */
+var TXT='Tehnoredactarea este pregătirea tehnică a unui [[manuscris .|Semnul de punctuație se lipește de cuvântul din fața lui: <code>manuscris.</code>]] Documentul trebuie [[sa|Lipsesc diacriticele: <code>să</code>.]] fie [[lizibil ,|Virgula se lipește de cuvântul anterior: <code>lizibil,</code>]] cu aspect plăcut și ordonat. Folosim maximum trei [[fonturi,în|După virgulă urmează un spațiu: <code>fonturi, în</code>]] același document [[( Arial|După paranteza de deschidere nu se pune spațiu: <code>(Arial</code>]] sau [[Verdana )|Paranteza de închidere se lipește de ultimul cuvânt: <code>Verdana)</code>]] și nu exagerăm cu [[Aldin,  Cursiv|Între cuvinte se pune un singur spațiu, nu două.]] sau Subliniat.';
+function parseTxt(){
+  var out=[],re=/\[\[(.+?)\|(.+?)\]\]/g,last=0,m;
+  function words(s){s.split(/\s+/).forEach(function(w){if(w)out.push({w:w})})}
+  while((m=re.exec(TXT))){words(TXT.slice(last,m.index));out.push({w:m[1],e:m[2]});last=m.index+m[0].length}
+  words(TXT.slice(last));return out;
+}
+var TF=[
+ {q:'Apeși <b>Enter</b> la sfârșitul fiecărui rând, ca să treci pe rândul următor.',a:false,f:'Trecerea pe rândul următor se face automat. Enter se apasă doar pentru paragraf nou.'},
+ {q:'Într-un document folosești cât mai multe <b>tipuri de font</b>, ca să fie frumos.',a:false,f:'Aspectul trebuie să fie unitar, deci folosești puține tipuri de font.'},
+ {q:'Între cuvinte se pune <b>un singur spațiu</b>.',a:true,f:'Un singur spațiu între cuvinte.'},
+ {q:'Aldin, Cursiv și Subliniat se folosesc <b>doar pentru evidențiere</b>, nu excesiv.',a:true,f:'Folosite prea des, își pierd rostul.'},
+ {q:'Textele în limba română trebuie să conțină <b>diacritice</b>.',a:true,f:'Diacriticele (ă, â, î, ș, ț) sunt obligatorii în documentele în română.'},
+ {q:'<b>Salvarea automată</b> funcționează oricând, chiar și pentru fișierele de pe calculator.',a:false,f:'Salvarea automată funcționează doar dacă fișierul este stocat în cloud.'},
+ {q:'Elementele (imagini, tabele) pot <b>ieși din zona paginii</b> dacă sunt frumoase.',a:false,f:'Elementele nu trebuie să iasă din zona paginii. Liniile de grilă te ajută.'},
+ {q:'Între <b>text și fundal</b> trebuie să existe un contrast bun.',a:true,f:'Contrastul bun face documentul lizibil.'}
+];
+function lvl6(){
+  var items=[{k:'hunt',w:7}].concat(shuffle(TF).map(function(x){return {k:'tf',x:x}}));
+  play(5,items,function(it,api){
+    if(it.k==='tf'){
+      api.prompt('Adevărat sau fals? '+it.x.q);
+      var o=[{t:'Adevărat',v:true},{t:'Fals',v:false}];
+      api.stage.innerHTML='<div class="opts">'+o.map(function(z,k){return '<button class="opt" data-k="'+k+'" style="font-size:1.1rem;text-align:center">'+z.t+'</button>'}).join('')+'</div>';
+      var done=false;
+      $$('.opt',api.stage).forEach(function(b,k){b.onclick=function(){
+        if(done)return;
+        if(o[k].v===it.x.a){done=true;b.classList.add('ok');$$('.opt',api.stage).forEach(function(x){x.disabled=true});api.right(it.x.f)}
+        else{b.classList.add('no');b.disabled=true;api.wrong('Gândește-te la regulile din lecție.')}
+      }});
+      return;
+    }
+    api.prompt('Un text are <b>7 greșeli</b> de tehnoredactare. Apasă pe fragmentele greșite, apoi pe <b>Verifică</b>.');
+    var toks=parseTxt();
+    api.stage.innerHTML='<div class="passage" id="ps">'+toks.map(function(t,k){return '<button class="tok" data-k="'+k+'">'+t.w+'</button> '}).join('')+'</div>'+
+      '<div class="hunt-bar"><span class="xp" id="cnt">Marcate: 0 din 7</span><button class="btn" id="chk">Verifică</button></div><ul class="why" id="why"></ul>';
+    var done=false;
+    function marked(){return $$('.tok.mark',api.stage).length}
+    $$('.tok',api.stage).forEach(function(b){b.onclick=function(){if(done)return;b.classList.toggle('mark');$('#cnt').textContent='Marcate: '+marked()+' din 7'}});
+    $('#chk').onclick=function(){
+      if(done)return;done=true;$('#chk').disabled=true;
+      var found=0,fals=0,why='';
+      $$('.tok',api.stage).forEach(function(b){
+        var t=toks[+b.dataset.k],m=b.classList.contains('mark');
+        b.classList.remove('mark');
+        if(t.e&&m){b.classList.add('hit');found++}
+        else if(t.e&&!m){b.classList.add('miss')}
+        else if(!t.e&&m){b.classList.add('fals');fals++}
+        if(t.e)why+='<li>'+t.e+'</li>';
+      });
+      $('#why').innerHTML=why;
+      var sc=Math.max(0,found-fals);
+      api.partial(sc,'<b>Ai găsit '+found+' din 7</b>'+(fals?' și ai marcat '+fals+' fragmente corecte (tăiate cu gri)':'')+'. Verde = găsită, roșu punctat = ratată. Mai jos sunt regulile. Scor: '+sc+' din 7.');
+    };
+  });
+}
+
+/* ---------- nivel 7: rebus ---------- */
+var RB=[
+ {w:'ANTET',i:2,c:'Zona din partea de sus a paginii, care se repetă pe fiecare pagină (Inserare → Antet și subsol).'},
+ {w:'ALDIN',i:0,c:'Formatarea care îngroașă literele (Ctrl+B). În engleză: Bold.'},
+ {w:'BORDURA',i:0,c:'Chenarul pe care îl adaugi în jurul unui paragraf sau al unui tabel (grupul Paragraf).'},
+ {w:'EDITARE',i:0,c:'Crearea, revizuirea și îmbunătățirea conținutului unui document, înainte de tehnoredactare.'},
+ {w:'FILE',i:2,c:'Pornire, Inserare și Aspect sunt ... ale panglicii (la plural).'}
+];
+function lvl7(){
+  play(6,[{k:'rb',w:5}],function(it,api){
+    api.prompt('Completează cele 5 cuvinte. Literele din <b>coloana galbenă</b> formează, pe verticală, un cuvânt din lecție. Poți scrie fără diacritice.');
+    var off=RB.map(function(r){return 2-r.i});
+    var solved=[],first=[],hinted=[],score=0,cnt=0;
+    api.stage.innerHTML='<div class="rb">'+RB.map(function(r,n){
+      var cells='';for(var j=0;j<9;j++){var k=j-off[n];if(k>=0&&k<r.w.length)cells+='<span class="cell on'+(k===r.i?' key':'')+'" id="c'+n+'_'+k+'"></span>';else cells+='<span class="cell"></span>'}
+      return '<div class="rbrow" id="r'+n+'"><div class="rbtop"><span class="rbnum">'+(n+1)+'</span><div class="cells">'+cells+'</div></div><div class="rbclue">'+r.c+' <span class="xp">('+r.w.length+' litere)</span></div>'+
+        '<div class="rbin"><input id="in'+n+'" autocomplete="off" aria-label="Răspuns '+(n+1)+'" maxlength="12"><button class="btn sm" data-ck="'+n+'">Verifică</button><button class="btn ghost sm" data-hn="'+n+'">Indiciu</button></div><div class="rbmsg" id="m'+n+'"></div></div>';
+    }).join('')+'<div id="vt"></div></div>';
+    function fill(n){var r=RB[n];for(var k=0;k<r.w.length;k++)$('#c'+n+'_'+k).textContent=r.w[k]}
+    function check(n){
+      if(solved[n])return;
+      var v=norm($('#in'+n).value);if(!v)return;
+      if(v===RB[n].w){
+        solved[n]=true;fill(n);$('#r'+n).classList.add('done');$('#in'+n).disabled=true;$('#m'+n).textContent='';
+        if(!first[n]&&!hinted[n])score++;cnt++;
+        if(cnt===RB.length){
+          var vw='TABEL';
+          $('#vt').innerHTML='<p style="text-align:center;font-weight:700;margin-top:6px">Pe verticală se formează:</p><div class="vert">'+vw.split('').map(function(ch,z){return '<span class="cell" style="animation-delay:'+(z*.12)+'s">'+ch+'</span>'}).join('')+'</div>';
+          api.partial(score,'<b>TABEL!</b> Ai rezolvat rebusul. Din prima, fără indiciu: '+score+' din 5. Tabelul se inserează din Inserare → Tabel și se formatează cu filele Proiectare tabel și Aspect.');
+        }
+      }else{
+        first[n]=true;var row=$('#r'+n);row.classList.remove('shake');void row.offsetWidth;row.classList.add('shake');
+        $('#m'+n).textContent='Nu este încă. Cuvântul are '+RB[n].w.length+' litere.';
+      }
+    }
+    $$('[data-ck]',api.stage).forEach(function(b){b.onclick=function(){check(+b.dataset.ck)}});
+    $$('[data-hn]',api.stage).forEach(function(b){b.onclick=function(){var n=+b.dataset.hn;if(solved[n])return;hinted[n]=true;$('#c'+n+'_0').textContent=RB[n].w[0];$('#m'+n).style.color='var(--muted)';$('#m'+n).textContent='Începe cu litera '+RB[n].w[0]+'.'}});
+    RB.forEach(function(r,n){$('#in'+n).addEventListener('keydown',function(e){if(e.key==='Enter')check(n)})});
+  });
+}
+
+start();
+})();
+</script>
+
+</html>
