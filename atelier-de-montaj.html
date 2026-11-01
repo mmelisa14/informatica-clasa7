@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Atelierul de montaj</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Concept: o masă de montaj. Fiecare secțiune e un "canal" cu cod de timp; accentul roșu e lumina REC. */
+:root{
+  --bg:#eceff4; --panel:#ffffff; --ink:#141821; --mute:#566074; --line:#d3d9e3;
+  --rec:#d93a2b; --img:#1f7a8c; --aud:#b7791f; --vid:#5b4bb7; --ok:#1f8a4c; --bad:#c0392b;
+  --wave:#b7791f; --screen:#10131a;
+  --f-d:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-b:'Figtree','Segoe UI',system-ui,sans-serif;
+  --f-m:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1218; --panel:#181d27; --ink:#e8ecf3; --mute:#9aa5b8; --line:#2b3342;
+  --rec:#ff5a48; --img:#4cc3d9; --aud:#f2b632; --vid:#9d8cff; --ok:#4cd17f; --bad:#ff7a6b;
+  --wave:#f2b632; --screen:#0a0c11; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1218; --panel:#181d27; --ink:#e8ecf3; --mute:#9aa5b8; --line:#2b3342;
+  --rec:#ff5a48; --img:#4cc3d9; --aud:#f2b632; --vid:#9d8cff; --ok:#4cd17f; --bad:#ff7a6b;
+  --wave:#f2b632; --screen:#0a0c11; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-b);font-size:17px;line-height:1.6;
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:56px;padding-block:28px 72px}
+h1,h2,h3{font-family:var(--f-d);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800}
+h3{font-size:1.2rem;font-weight:800}
+p{margin:0;max-width:65ch}
+.tc{font-family:var(--f-m);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.eyebrow{font-family:var(--f-m);font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mute)}
+/* header */
+.top{display:flex;flex-direction:column;gap:18px}
+.rec{display:inline-flex;align-items:center;gap:10px;color:var(--rec)}
+.rec i{width:12px;height:12px;border-radius:50%;background:var(--rec);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.lead{font-size:1.2rem;color:var(--mute)}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav a{font-family:var(--f-m);font-size:.85rem;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);
+  padding:8px 14px;border-radius:999px;background:var(--panel)}
+.nav a:hover,.nav a:focus-visible{border-color:var(--rec);outline:none}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.step{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.step b{font-family:var(--f-d);font-size:1.25rem}
+.step span{font-size:.92rem;color:var(--mute)}
+.step .tc{color:var(--rec);font-size:.8rem}
+/* channel sections */
+.ch{display:flex;flex-direction:column;gap:22px;border-top:4px solid var(--c);padding-top:18px}
+.ch.img{--c:var(--img)}.ch.aud{--c:var(--aud)}.ch.vid{--c:var(--vid)}
+.ch .eyebrow{color:var(--c)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:.97rem;color:var(--mute)}
+.card h3{color:var(--ink)}
+.tag{font-family:var(--f-m);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--c)}
+.lab{background:var(--screen);color:#e8ecf3;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lab .eyebrow{color:#9aa5b8}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px}
+.ctrls label{display:flex;flex-direction:column;gap:2px;font-size:.85rem;font-family:var(--f-m);color:#c4cce0}
+input[type=range]{width:100%;accent-color:var(--c)}
+canvas{width:100%;display:block;border-radius:8px;background:#05070b}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;font-size:.9rem;font-weight:700;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;
+  background:var(--c,var(--rec));color:#fff}
+button.ghost{background:transparent;border:1.5px solid #4a5468;color:#e8ecf3}
+button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.note{font-size:.88rem;color:#9aa5b8;max-width:none}
+.vocab{display:flex;flex-wrap:wrap;gap:8px}
+.vocab span{font-size:.88rem;border:1.5px dashed var(--line);border-radius:6px;padding:4px 10px;background:var(--panel)}
+.vocab b{font-family:var(--f-m);color:var(--c);font-weight:500}
+/* formats */
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem;background:var(--panel)}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-m);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mute)}
+td:first-child{font-family:var(--f-m);font-weight:500}
+/* game */
+.game{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:clamp(16px,4vw,28px);display:flex;flex-direction:column;gap:18px}
+.score{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.q{font-family:var(--f-d);font-size:1.35rem;font-weight:800;line-height:1.25}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.opts button{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);text-align:left;font-weight:500;padding:12px 14px}
+.opts button:hover{border-color:var(--rec)}
+.opts button.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--panel))}
+.opts button.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--panel))}
+.fb{min-height:3.2em;font-size:.97rem}
+.next{background:var(--rec)}
+.order{display:flex;flex-direction:column;gap:8px}
+.order button{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);text-align:left;font-weight:500}
+.order button.done{border-color:var(--ok);color:var(--mute)}
+footer{color:var(--mute);font-size:.9rem}
+@media (max-width:640px){.flow{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){.rec i{animation:none}}
+.lab select,.lab input[type=text]{font:inherit;font-size:.9rem;background:#0f131b;color:#e8ecf3;border:1.5px solid #4a5468;border-radius:8px;padding:8px 10px;width:100%}
+.lab input[type=checkbox]{accent-color:var(--c);width:18px;height:18px}
+.chk{flex-direction:row!important;align-items:center;gap:8px!important}
+.missions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+.missions li{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;line-height:1.35;color:#c4cce0;border:1.5px solid #2b3342;border-radius:8px;padding:9px 11px}
+.missions li i{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #4a5468;display:grid;place-items:center;font-style:normal;font-size:.75rem;color:#fff}
+.missions li.ok{border-color:#4cd17f;color:#fff}
+.missions li.ok i{background:#4cd17f;border-color:#4cd17f;color:#062}
+.verdict{font-family:var(--f-d);font-size:1.15rem;font-weight:800;color:#e8ecf3;min-height:1.4em}
+.lab .btns .tc{align-self:center;color:#c4cce0;font-size:.85rem}
+.lab button:disabled{opacity:.4;cursor:default}
+.ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+.ops div{border:1.5px solid #2b3342;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.ops b{color:var(--c);font-family:var(--f-m);font-weight:500;font-size:.85rem}
+.ops span{font-size:.88rem;line-height:1.4;color:#c4cce0}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="rec eyebrow"><i></i><span>REC</span> <span class="tc" id="clock">00:00:00:00</span></div>
+  <h1>Atelierul de montaj</h1>
+  <p class="lead">Lecția 1: ce este editarea și cum se editează imaginea, sunetul și filmul. Teorie scurtă, mici laboratoare pe care le poți încerca și un joc la final.</p>
+  <nav class="nav" aria-label="Cuprins">
+    <a href="#ce-este">Ce este editarea</a><a href="#imagine">Imagine</a><a href="#audio">Audio</a><a href="#video">Video</a><a href="#formate">Formate</a><a href="#joc">Joc</a>
+  </nav>
+</header>
+
+<section id="ce-este" class="ch" style="--c:var(--rec)">
+  <div class="eyebrow">Ideea de bază</div>
+  <h2>Editarea înseamnă să iei decizii despre un material brut</h2>
+  <p>Ce captezi cu telefonul, microfonul sau camera se numește <b>material brut</b>. Are greșeli: pauze lungi, zgomot, lumină slabă, momente inutile. Editarea este procesul prin care alegi ce rămâne, în ce ordine și cum arată sau sună. Nu schimbi realitatea, spui o poveste mai clar.</p>
+  <div class="flow">
+    <div class="step"><span class="tc">01</span><b>Importă</b><span>Aduci fișierele în program și le privești.</span></div>
+    <div class="step"><span class="tc">02</span><b>Taie</b><span>Păstrezi doar ce contează.</span></div>
+    <div class="step"><span class="tc">03</span><b>Îmbunătățește</b><span>Corectezi lumina, volumul, culorile, adaugi efecte.</span></div>
+    <div class="step"><span class="tc">04</span><b>Exportă</b><span>Salvezi rezultatul într-un format potrivit.</span></div>
+  </div>
+  <p>Aceiași pași apar în orice program, de la o aplicație de telefon până la un studio profesionist. Doar butoanele arată altfel. Dacă înțelegi pașii, înveți repede orice aplicație.</p>
+  <div class="card"><h3>Editare nedistructivă</h3><p>Programele bune nu modifică fișierul original. Rețin o listă de instrucțiuni (taie de aici, mărește volumul cu 20%) și o aplică doar la export. De aceea poți apăsa oricând Undo (Ctrl+Z). Păstrează mereu o copie a originalului.</p></div>
+</section>
+
+<section id="imagine" class="ch img">
+  <div class="eyebrow">Canal 1 · Imagine</div>
+  <h2>Imaginea: pixeli pe care îi poți muta, tăia și colora</h2>
+  <p>O imagine digitală (raster) este o grilă de puncte numite <b>pixeli</b>, fiecare cu o culoare. O poză de 4000 × 3000 are 12 milioane de pixeli. Editarea înseamnă să schimbi valorile acestor pixeli sau să alegi care dintre ei rămân.</p>
+  <div class="cols">
+    <div class="card"><span class="tag">Cadrare</span><h3>Crop și redimensionare</h3><p>Tai marginile ca să schimbi compoziția. Redimensionarea schimbă numărul de pixeli: o imagine mărită prea mult devine neclară.</p></div>
+    <div class="card"><span class="tag">Lumină</span><h3>Luminozitate și contrast</h3><p>Luminozitatea face tot cadrul mai deschis sau mai închis. Contrastul mărește diferența dintre zonele luminoase și cele umbrite.</p></div>
+    <div class="card"><span class="tag">Culoare</span><h3>Saturație și nuanță</h3><p>Saturația spune cât de vii sunt culorile. La zero obții alb-negru. Nuanța (hue) rotește culorile pe cercul cromatic.</p></div>
+    <div class="card"><span class="tag">Straturi</span><h3>Layere și selecții</h3><p>Fiecare element stă pe un strat separat, ca foile transparente puse una peste alta. Selecția îți permite să lucrezi doar pe o zonă.</p></div>
+  </div>
+  <div class="lab" id="labImg">
+    <div class="eyebrow">Laborator · încearcă singur</div>
+    <canvas id="cImg" width="720" height="320" aria-label="Imagine de test"></canvas>
+    <div class="ctrls">
+      <label>Luminozitate <input id="rB" type="range" min="-60" max="60" value="0"></label>
+      <label>Contrast <input id="rC" type="range" min="-60" max="60" value="0"></label>
+      <label>Saturație <input id="rS" type="range" min="-100" max="100" value="0"></label>
+      <label>Rotire nuanță <input id="rH" type="range" min="0" max="360" value="0"></label>
+    </div>
+    <div class="btns"><button class="ghost" id="bCrop" type="button">Crop 3:2 / întreg</button><button class="ghost" id="bBW" type="button">Alb-negru</button><button class="ghost" id="bRst" type="button">Resetează</button></div>
+    <p class="note">Imaginea e desenată de pagină, nu e o fotografie. Filtrele de aici sunt aceleași idei pe care le găsești în orice editor foto.</p>
+  </div>
+  <div class="vocab"><span><b>pixel</b> cel mai mic punct</span><span><b>rezoluție</b> număr de pixeli</span><span><b>raster / vector</b> pixeli sau forme matematice</span><span><b>layer</b> strat</span><span><b>RGB</b> roșu, verde, albastru</span><span><b>DPI</b> densitate la tipar</span></div>
+</section>
+
+
+<section id="audio" class="ch aud">
+  <div class="eyebrow">Canal 2 · Audio</div>
+  <h2>Sunetul: o undă pe care o vezi și o poți tăia</h2>
+  <p>Microfonul transformă vibrația aerului într-un semnal electric, iar calculatorul îl măsoară de zeci de mii de ori pe secundă. Rezultatul este o <b>formă de undă</b>: cu cât unda e mai înaltă, cu atât sunetul e mai tare. Pauzele apar ca linii aproape drepte.</p>
+  <div class="cols">
+    <div class="card"><span class="tag">Selecție</span><h3>Taie, copiază, lipește</h3><p>Selectezi o porțiune din undă și o ștergi sau o muți. Așa scoți o greșeală de vorbire, o tuse sau o pauză lungă.</p></div>
+    <div class="card"><span class="tag">Nivel</span><h3>Amplificare și normalizare</h3><p>Amplificarea mărește volumul cu o valoare aleasă. Normalizarea ridică întregul fișier până când cel mai tare punct atinge limita, fără distorsiuni.</p></div>
+    <div class="card"><span class="tag">Tranziție</span><h3>Fade in și fade out</h3><p>Fade in pornește sunetul din liniște, fade out îl stinge treptat. Evită intrările sau încheierile bruște.</p></div>
+    <div class="card"><span class="tag">Efecte</span><h3>Ecou și reducerea zgomotului</h3><p>Ecoul repetă sunetul mai încet, după o clipă. Reducerea zgomotului scade șuieratul de fond din pauze.</p></div>
+  </div>
+  <div class="lab" id="labAud">
+    <div class="eyebrow">Studio audio · misiune: repară înregistrarea</div>
+    <p class="note">Înregistrarea de mai jos este o scurtă melodie. Are o tuse, o pauză prea lungă, un șuierat de fundal, volum prea mic și un final brusc. Ascultă-o, apoi rezolvă problemele cu butoanele de sub undă. Clic pe undă mută cursorul, tragerea alege o zonă.</p>
+    <canvas id="cAud" width="720" height="220" aria-label="Formă de undă"></canvas>
+    <div class="btns"><button type="button" id="aPlay">▶ Ascultă</button><button type="button" class="ghost" id="aStop">■ Stop</button><button type="button" class="ghost" id="aOrig">Ascultă originalul</button><span class="tc" id="aTime">0.00 / 8.00 s</span></div>
+    <div class="btns">
+      <button type="button" id="aAmp">Amplifică ×1,5</button>
+      <button type="button" id="aNorm">Normalizează</button>
+      <button type="button" id="aIn">Fade in</button>
+      <button type="button" id="aOut">Fade out</button>
+      <button type="button" id="aCut">Taie selecția</button>
+      <button type="button" id="aDen">Reduce zgomotul</button>
+      <button type="button" id="aEcho">Adaugă ecou</button>
+      <button type="button" class="ghost" id="aUndo">Anulează</button>
+      <button type="button" class="ghost" id="aRst">Resetează</button>
+    </div>
+    <div class="ops" id="aOps">
+      <div><b>Amplifică ×1,5</b><span>Mărește volumul de 1,5 ori, doar în zona aleasă (sau în tot sunetul, dacă nu ai ales nimic). Atenție: dacă unda atinge marginea de sus, devine roșie. Asta se numește clipping și sunetul se distorsionează.</span></div>
+      <div><b>Normalizează</b><span>Caută cel mai tare punct din tot fișierul și ridică volumul astfel încât acel punct să ajungă aproape de maxim. Toate părțile cresc la fel, deci nu apare distorsiune. Se face după ce ai scos zgomotele puternice, ca tusea.</span></div>
+      <div><b>Fade in</b><span>Volumul crește treptat de la zero până la normal, pe zona aleasă. Începutul nu mai sare brusc în urechi. Alege zona de la începutul sunetului.</span></div>
+      <div><b>Fade out</b><span>Volumul scade treptat până la zero, pe zona aleasă. Finalul se stinge frumos, nu se taie brusc. Alege zona de la sfârșit, de exemplu ultima secundă.</span></div>
+      <div><b>Taie selecția</b><span>Șterge zona aleasă, iar partea de după se mută în urmă. Folosește-o pentru o tuse, o greșeală sau o pauză prea lungă. Poți anula oricând.</span></div>
+      <div><b>Reduce zgomotul</b><span>Șuieratul de fundal este un sunet foarte slab, prezent și când nimeni nu cântă. Funcția găsește bucățile mai slabe decât un prag și le reduce aproape la zero. Melodia, care e mai tare, rămâne neatinsă.</span></div>
+      <div><b>Adaugă ecou</b><span>Pune peste sunet o copie mai încet, întârziată cu un sfert de secundă. Sună ca într-o sală mare. Fișierul devine puțin mai lung, ca ecoul ultimei note să aibă loc să se stingă.</span></div>
+      <div><b>Anulează / Resetează</b><span>Anulează desface ultima operație. Resetează aduce înregistrarea la starea inițială. Asta merge pentru că editarea nu strică fișierul original.</span></div>
+    </div>
+    <div class="verdict" id="aExp" aria-live="polite" style="font-weight:500;font-size:1rem;color:#c4cce0">Apasă un buton ca să vezi aici ce s-a întâmplat cu sunetul.</div>
+    <ol class="missions" id="aMis"></ol>
+    <div class="verdict" id="aVerd"></div>
+    <p class="note">Sfat: ordinea contează. Dacă normalizezi cât timp tusea e încă în fișier, programul se ghidează după cel mai tare punct, adică după tuse. Redu volumul boxelor înainte de prima ascultare.</p>
+  </div>
+  <div class="vocab"><span><b>Hz</b> înălțimea sunetului</span><span><b>dB</b> tăria sunetului</span><span><b>sample rate</b> măsurători pe secundă (44100)</span><span><b>clipping</b> distorsiune la volum prea mare</span><span><b>mono / stereo</b> 1 sau 2 canale</span></div>
+</section>
+
+<section id="video" class="ch vid">
+  <div class="eyebrow">Canal 3 · Video</div>
+  <h2>Filmul: imagini în succesiune, plus sunet, pe o linie de timp</h2>
+  <p>Un film este o serie de imagini numite <b>cadre</b>, afișate rapid: 24, 25 sau 30 pe secundă. Programele de montaj așază clipurile pe o <b>linie de timp</b> (timeline), cu piste separate pentru imagine și sunet. Ce stă mai la stânga se vede și se aude mai devreme.</p>
+  <div class="cols">
+    <div class="card"><span class="tag">Montaj</span><h3>Taie și reordonează</h3><p>Împarți un clip în două la poziția cursorului, ștergi bucata inutilă și muți clipurile în ordinea poveștii.</p></div>
+    <div class="card"><span class="tag">Legătură</span><h3>Tranziții</h3><p>Tăietura directă e cea mai folosită. Fondul încrucișat (dissolve) arată trecerea timpului sau a locului, dar folosit prea des obosește.</p></div>
+    <div class="card"><span class="tag">Text</span><h3>Titluri și subtitrări</h3><p>Textul se adaugă ca strat peste imagine. Subtitrările ajută la înțelegere și atunci când privești fără sunet.</p></div>
+    <div class="card"><span class="tag">Aspect</span><h3>Culoare și sunet</h3><p>Corecția de culoare dă filmului un aspect unitar. Sunetul fiecărui clip se poate reduce la zero sau înlocui cu muzică.</p></div>
+  </div>
+  <div class="lab" id="labVid">
+    <div class="eyebrow">Studio video · misiune: reclama de 8 secunde</div>
+    <p class="note">Ai trei clipuri de 4 secunde: Răsărit, Oraș și Ploaie. Apasă Redă ca să le vezi și să le auzi, apoi montează reclama cerută în lista de mai jos. Clic sau tragere pe linia de timp mută cursorul.</p>
+    <canvas id="cVidP" width="480" height="270" style="aspect-ratio:16/9" aria-label="Previzualizare film"></canvas>
+    <div class="btns"><button type="button" id="vPlay">▶ Redă cu sunet</button><button type="button" class="ghost" id="vStop">■ La început</button><span class="tc" id="vTime">00:00:00:00</span></div>
+    <canvas id="cVidT" width="720" height="150" aria-label="Linia de timp"></canvas>
+    <div class="btns">
+      <button type="button" id="vSplit">Taie la cursor</button>
+      <button type="button" id="vDel">Șterge clipul</button>
+      <button type="button" id="vL">← Mută</button>
+      <button type="button" id="vR">Mută →</button>
+      <button type="button" id="vFx">Efect: normal</button>
+      <button type="button" id="vMute">Sunet: pornit</button>
+      <button type="button" class="ghost" id="vRst">Resetează</button>
+    </div>
+    <div class="ctrls">
+      <label>Tranziție între clipuri<select id="vTr"><option value="cut">Tăietură directă</option><option value="mix">Fond încrucișat</option></select></label>
+      <label>Text titlu<input type="text" id="vTitle" value="Orașul meu" maxlength="28"></label>
+      <label class="chk"><input type="checkbox" id="vTon"> Afișează titlul la început</label>
+    </div>
+    <ol class="missions" id="vMis"></ol>
+    <div class="verdict" id="vVerd"></div>
+  </div>
+  <div class="vocab"><span><b>fps</b> cadre pe secundă</span><span><b>cut</b> tăietură</span><span><b>timeline</b> linia de timp</span><span><b>B-roll</b> imagini de acoperire</span><span><b>render</b> crearea fișierului final</span><span><b>1080p</b> 1920 × 1080 pixeli</span></div>
+</section>
+<section id="formate" class="ch" style="--c:var(--rec)">
+  <div class="eyebrow">Salvare</div>
+  <h2>Proiect, fișier final și formate</h2>
+  <p>Un <b>proiect</b> păstrează instrucțiunile de montaj și se deschide doar în programul care l-a creat. Un <b>fișier exportat</b> se poate trimite oricui. Lucrează în proiect, exportă la final.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Format</th><th>Tip</th><th>Când îl alegi</th></tr></thead>
+    <tbody>
+      <tr><td>.jpg</td><td>Imagine, comprimat</td><td>Fotografii pentru web și telefon, fișier mic</td></tr>
+      <tr><td>.png</td><td>Imagine, fără pierderi</td><td>Logo-uri, capturi de ecran, fundal transparent</td></tr>
+      <tr><td>.wav</td><td>Audio, necomprimat</td><td>Cât lucrezi la sunet; calitate maximă, fișier mare</td></tr>
+      <tr><td>.mp3</td><td>Audio, comprimat</td><td>Muzică, podcast, trimis pe internet</td></tr>
+      <tr><td>.mp4</td><td>Video, comprimat</td><td>Aproape orice: YouTube, telefon, trimis prin mesaj</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="joc" class="ch" style="--c:var(--rec)">
+  <div class="eyebrow">Testează-te</div>
+  <h2>Jocul montorului</h2>
+  <p>Două probe. În prima, 10 întrebări rapide. În a doua, pui în ordine pașii unui montaj. Fiecare răspuns bun aduce puncte, iar o serie de răspunsuri corecte aduce bonus.</p>
+  <div class="game" id="g1"></div>
+  <div class="game" id="g2"></div>
+</section>
+<footer>Pagină pregătită pentru prima lecție de editare. Laboratoarele sunt simulări simple, nu programe reale.</footer>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+/* ceas cod de timp */
+const t0=performance.now(),clk=$('clock');
+function tc(sec,fps){fps=fps||25;const f=Math.floor((sec%1)*fps),s=Math.floor(sec)%60,m=Math.floor(sec/60)%60,h=Math.floor(sec/3600);
+  const p=n=>String(n).padStart(2,'0');return p(h)+':'+p(m)+':'+p(s)+':'+p(f)}
+setInterval(()=>{clk.textContent=tc((performance.now()-t0)/1000)},40);
+
+/* ===== IMAGINE ===== */
+const ci=$('cImg'),gi=ci.getContext('2d');
+const scene=document.createElement('canvas');scene.width=720;scene.height=320;
+(function(){const g=scene.getContext('2d');
+ let s=g.createLinearGradient(0,0,0,320);s.addColorStop(0,'#2b5aa8');s.addColorStop(.55,'#f0a35e');s.addColorStop(1,'#f7d28b');
+ g.fillStyle=s;g.fillRect(0,0,720,320);
+ g.fillStyle='#fff3c4';g.beginPath();g.arc(470,150,42,0,7);g.fill();
+ g.fillStyle='#6b4a8f';g.beginPath();g.moveTo(0,230);g.lineTo(120,120);g.lineTo(230,210);g.lineTo(340,100);g.lineTo(470,225);g.lineTo(600,130);g.lineTo(720,215);g.lineTo(720,260);g.lineTo(0,260);g.fill();
+ g.fillStyle='#2f7d6b';g.fillRect(0,250,720,70);
+ g.fillStyle='#1d5a4c';for(let i=0;i<14;i++){const x=20+i*52;g.beginPath();g.moveTo(x,300);g.lineTo(x+18,245+(i%3)*8);g.lineTo(x+36,300);g.fill()}
+ g.fillStyle='#d9423a';g.fillRect(320,262,56,34);g.fillStyle='#8a2420';g.beginPath();g.moveTo(312,263);g.lineTo(348,238);g.lineTo(384,263);g.fill();
+})();
+let crop=false,bw=false;
+function drawImg(){gi.fillStyle='#05070b';gi.fillRect(0,0,720,320);
+ if(crop)gi.drawImage(scene,120,0,480,320,120,0,480,320);else gi.drawImage(scene,0,0)}
+function filt(){const b=+$('rB').value,c=+$('rC').value,s=+$('rS').value,h=+$('rH').value;
+ ci.style.filter='brightness('+(1+b/100)+') contrast('+(1+c/100)+') saturate('+(bw?0:1+s/100)+') hue-rotate('+h+'deg)'}
+['rB','rC','rS','rH'].forEach(i=>$(i).addEventListener('input',filt));
+$('bCrop').onclick=()=>{crop=!crop;drawImg()};
+$('bBW').onclick=()=>{bw=!bw;filt()};
+$('bRst').onclick=()=>{['rB','rC','rS','rH'].forEach(i=>$(i).value=0);crop=false;bw=false;drawImg();filt()};
+drawImg();
+
+
+/* ===== AUDIO ===== */
+const SR=22050,ca=$('cAud'),ga=ca.getContext('2d');
+let actx=null;
+function ac(){actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}
+function mkTrack(){
+ let s=7;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647};
+ const n=8*SR,d=new Float32Array(n),fl=new Uint8Array(n);
+ for(let i=0;i<n;i++)d[i]=(rnd()*2-1)*0.03;
+ const notes=[[0,261.6],[.5,293.7],[1,329.6],[1.5,392],[3,392],[3.5,329.6],[4,293.7],[6.5,261.6],[7,329.6],[7.5,392]];
+ notes.forEach(([st,f])=>{const a=Math.floor(st*SR),len=Math.floor(.5*SR);
+  for(let k=0;k<len&&a+k<n;k++){const t=k/SR,env=Math.min(1,t/.02)*Math.exp(-t*2.5);
+   const ph=2*Math.PI*f*t+0.8*Math.sin(2*Math.PI*5*t)*0.02;
+   d[a+k]+=0.35*env*(Math.sin(ph)+.5*Math.sin(2*ph)+.25*Math.sin(3*ph))/1.75}});
+ const c0=Math.floor(2.3*SR),c1=Math.floor(2.7*SR);
+ for(let i=c0;i<c1;i++){const u=(i-c0)/(c1-c0),env=Math.sin(Math.PI*u)*Math.exp(-u*1.5);
+  d[i]+=0.9*env*((rnd()*2-1)*.8+.2*Math.sin(2*Math.PI*150*i/SR));fl[i]=1}
+ for(let i=Math.floor(4.5*SR);i<Math.floor(6.5*SR);i++)fl[i]=2;
+ for(let i=0;i<n;i++)d[i]=Math.max(-1,Math.min(1,d[i]));
+ return{d,fl}}
+const ORIG=mkTrack();
+const cnt=(f,v)=>{let c=0;for(let i=0;i<f.length;i++)if(f[i]===v)c++;return c};
+const O1=cnt(ORIG.fl,1),O2=cnt(ORIG.fl,2),O0=cnt(ORIG.fl,0);
+let T,sel=null,cur=0,drag=null,hist=[],play=null;
+function reset(){T={d:ORIG.d.slice(),fl:ORIG.fl.slice()};sel=null;cur=0;hist=[]}
+reset();
+const push=()=>{hist.push({d:T.d.slice(),fl:T.fl.slice()});if(hist.length>15)hist.shift()};
+function rng(){return sel?[Math.min(sel[0],sel[1]),Math.max(sel[0],sel[1])]:[0,T.d.length]}
+function drawA(){const W=720,H=220,m=H/2,n=T.d.length;ga.fillStyle='#05070b';ga.fillRect(0,0,W,H);
+ ga.strokeStyle='#2b3342';ga.beginPath();ga.moveTo(0,m);ga.lineTo(W,m);ga.stroke();
+ if(sel){const a=rng();ga.fillStyle='rgba(242,182,50,.22)';ga.fillRect(a[0]/n*W,0,(a[1]-a[0])/n*W,H)}
+ for(let x=0;x<W;x++){const i0=Math.floor(x/W*n),i1=Math.max(i0+1,Math.floor((x+1)/W*n)),st=Math.max(1,Math.floor((i1-i0)/30));let lo=0,hi=0;
+  for(let i=i0;i<i1;i+=st){const v=T.d[i];if(v<lo)lo=v;if(v>hi)hi=v}
+  ga.fillStyle=(hi>=.99||lo<=-.99)?'#ff5a48':'#f2b632';
+  ga.fillRect(x,m-hi*(m-6),1,Math.max(1,(hi-lo)*(m-6)))}
+ const px=(play?play.pos():cur)/n*W;ga.fillStyle='#fff';ga.fillRect(px,0,2,H);
+ $('aTime').textContent=((play?play.pos():cur)/SR).toFixed(2)+' / '+(n/SR).toFixed(2)+' s'}
+function xs(e){const r=ca.getBoundingClientRect();return Math.max(0,Math.min(T.d.length,Math.round((e.clientX-r.left)/r.width*T.d.length)))}
+ca.style.touchAction='none';
+ca.addEventListener('pointerdown',e=>{stopA();drag=xs(e);sel=null;cur=drag;ca.setPointerCapture(e.pointerId);drawA()});
+ca.addEventListener('pointermove',e=>{if(drag===null)return;const p=xs(e);if(Math.abs(p-drag)>SR*.03)sel=[drag,p];else sel=null;drawA()});
+ca.addEventListener('pointerup',()=>{drag=null;drawA()});
+function stopA(){if(play){try{play.src.stop()}catch(e){}play=null}drawA()}
+function playBuf(d,from,to,hasSel){stopA();const c=ac(),len=to-from;if(len<100)return;
+ const b=c.createBuffer(1,len,SR);b.copyToChannel(d.subarray(from,to),0);
+ const g=c.createGain();g.gain.value=.8;const src=c.createBufferSource();src.buffer=b;src.connect(g);g.connect(c.destination);
+ const t0=c.currentTime;src.start();
+ play={src,pos:()=>Math.min(to,from+(c.currentTime-t0)*SR)};
+ src.onended=()=>{if(play&&play.src===src){cur=hasSel?from:0;play=null;drawA()}};
+ (function loop(){if(!play||play.src!==src)return;drawA();requestAnimationFrame(loop)})()}
+$('aPlay').onclick=()=>{const n=T.d.length;if(sel){const a=rng();playBuf(T.d,a[0],a[1],true)}else playBuf(T.d,cur>=n-200?0:cur,n,false)};
+$('aStop').onclick=stopA;
+$('aOrig').onclick=()=>playBuf(ORIG.d,0,ORIG.d.length,false);
+function op(fn){stopA();push();fn();missions();drawA()}
+$('aAmp').onclick=()=>op(()=>{const a=rng();for(let i=a[0];i<a[1];i++)T.d[i]=Math.max(-1,Math.min(1,T.d[i]*1.5))});
+$('aNorm').onclick=()=>op(()=>{let p=.0001;for(let i=0;i<T.d.length;i++)p=Math.max(p,Math.abs(T.d[i]));const k=.95/p;for(let i=0;i<T.d.length;i++)T.d[i]*=k});
+$('aIn').onclick=()=>op(()=>{const a=rng(),L=Math.max(1,a[1]-a[0]);for(let i=a[0];i<a[1];i++)T.d[i]*=(i-a[0])/L});
+$('aOut').onclick=()=>op(()=>{const a=rng(),L=Math.max(1,a[1]-a[0]);for(let i=a[0];i<a[1];i++)T.d[i]*=1-(i-a[0])/L});
+$('aCut').onclick=()=>{if(!sel){$('aExp').textContent='Taie selecția: mai întâi trage pe undă ca să alegi zona pe care vrei să o ștergi.';return}op(()=>{const a=rng();const d=new Float32Array(T.d.length-(a[1]-a[0])),f=new Uint8Array(d.length);
+ d.set(T.d.subarray(0,a[0]));d.set(T.d.subarray(a[1]),a[0]);f.set(T.fl.subarray(0,a[0]));f.set(T.fl.subarray(a[1]),a[0]);T.d=d;T.fl=f;sel=null;cur=Math.min(a[0],d.length)});$('aExp').textContent=SAY.aCut};
+$('aDen').onclick=()=>op(()=>{const B=Math.floor(SR*.01);for(let b=0;b<T.d.length;b+=B){let p=0;const e=Math.min(T.d.length,b+B);for(let i=b;i<e;i++)p=Math.max(p,Math.abs(T.d[i]));
+ if(p<.12)for(let i=b;i<e;i++)T.d[i]*=.05}});
+$('aEcho').onclick=()=>op(()=>{const D=Math.floor(.25*SR),tail=Math.floor(.6*SR),n=T.d.length,d=new Float32Array(n+tail),f=new Uint8Array(n+tail);
+ d.set(T.d);f.set(T.fl);for(let i=0;i<n+tail;i++){if(i>=D)d[i]=Math.max(-1,Math.min(1,d[i]+.4*d[i-D]))}
+ for(let i=0;i<n+tail;i++)d[i]=Math.max(-1,Math.min(1,d[i]));T.d=d;T.fl=f});
+$('aUndo').onclick=()=>{if(!hist.length)return;stopA();const h=hist.pop();T.d=h.d;T.fl=h.fl;sel=null;cur=0;missions();drawA()};
+$('aRst').onclick=()=>{stopA();reset();missions();drawA()};
+function missions(){const n=T.d.length,B=Math.floor(SR*.02);
+ let peak=0,pk2=0;for(let i=0;i<n;i++)if(T.fl[i]!==1){const v=Math.abs(T.d[i]);if(v>peak)peak=v}
+ const e0=Math.max(0,n-Math.floor(SR*.1));for(let i=e0;i<n;i++)pk2=Math.max(pk2,Math.abs(T.d[i]));
+ let clipc=0;for(let i=0;i<n;i++)if(Math.abs(T.d[i])>=.999)clipc++;
+ const rms=[];for(let b=0;b+B<=n;b+=B){let s=0;for(let i=b;i<b+B;i++)s+=T.d[i]*T.d[i];rms.push(Math.sqrt(s/B))}
+ rms.sort((x,y)=>x-y);const floor=rms.length?rms[Math.floor(rms.length*.1)]:0;
+ const c1=cnt(T.fl,1),c2=cnt(T.fl,2),c0=cnt(T.fl,0);
+ const M=[['Scoate tusea (vârful uriaș din undă)',c1<O1*.1],
+  ['Scurtează pauza lungă la mai puțin de o treime',c2<O2*.35],
+  ['Păstrează melodia: nu tăia notele',c0>=O0*.85],
+  ['Reduce șuieratul de fundal din pauze',floor<.006],
+  ['Normalizează melodia după ce ai tăiat tusea, fără distorsiuni',peak>=.9&&clipc<n*.001],
+  ['Încheie cu fade out, ca finalul să nu fie brusc',peak>0&&pk2<peak*.1]];
+ $('aMis').innerHTML=M.map(m=>'<li class="'+(m[1]?'ok':'')+'"><i>'+(m[1]?'✓':'')+'</i><span>'+m[0]+'</span></li>').join('');
+ const k=M.filter(m=>m[1]).length;
+ $('aVerd').textContent=k===6?'Studio reparat. Apasă „Ascultă” și compară cu originalul.':'Misiuni îndeplinite: '+k+' din 6';}
+missions();drawA();
+
+const SAY={aAmp:'Amplificare: volumul a crescut de 1,5 ori. Uită-te la undă: dacă vezi bare roșii, sunetul a depășit limita și se distorsionează. Apasă Anulează și încearcă pe o zonă mai mică.',
+ aNorm:'Normalizare: tot sunetul a fost ridicat până când cel mai tare punct a ajuns aproape de maxim. Dacă melodia a rămas încet, cel mai tare punct era tusea. Taie-o și normalizează din nou.',
+ aIn:'Fade in: în zona aleasă volumul crește de la zero la normal. Dacă nu ai ales nicio zonă, efectul s-a întins pe tot fișierul.',
+ aOut:'Fade out: în zona aleasă volumul scade până la zero. Pentru un final frumos alege ultima secundă a înregistrării.',
+ aCut:'Zona aleasă a fost ștearsă, iar ce era după ea s-a mutat în urmă. Fișierul este acum mai scurt.',
+ aDen:'Reducerea zgomotului: bucățile foarte slabe, adică șuieratul din pauze, au fost reduse aproape la zero. Ascultă pauza: acum e liniște.',
+ aEcho:'Ecou: sub sunet s-a adăugat o copie mai încet, întârziată cu un sfert de secundă, plus o coadă ca ecoul să se stingă. Fișierul este mai lung.',
+ aUndo:'Ultima operație a fost anulată.',aRst:'Înregistrarea a revenit la starea inițială.'};
+Object.keys(SAY).forEach(id=>{if(id!=='aCut')$(id).addEventListener('click',()=>{$('aExp').textContent=SAY[id]})});
+
+/* ===== VIDEO: scene si sunet ===== */
+const PW=480,PH=270,cp=$('cVidP'),gp=cp.getContext('2d'),ct=$('cVidT'),gt=ct.getContext('2d');
+const off=document.createElement('canvas');off.width=PW;off.height=PH;const go=off.getContext('2d');
+const mix_=document.createElement('canvas');mix_.width=PW;mix_.height=PH;const gm=mix_.getContext('2d');
+function sr(i){const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+const SKY=[];for(let i=0;i<14;i++)SKY.push({x:i*36+sr(i)*10,w:24+sr(i+9)*18,h:70+sr(i+3)*110});
+function sceneA(g,t){t=t%4;const k=t/4;
+ const s=g.createLinearGradient(0,0,0,PH);s.addColorStop(0,'hsl('+(230-k*190)+',55%,'+(18+k*30)+'%)');s.addColorStop(1,'hsl('+(20+k*15)+',90%,'+(35+k*30)+'%)');
+ g.fillStyle=s;g.fillRect(0,0,PW,PH);
+ g.fillStyle='#fff3c4';g.beginPath();g.arc(330,PH*.75-k*PH*.38,26+k*8,0,7);g.fill();
+ g.fillStyle='#3d2a5c';g.beginPath();g.moveTo(0,PH);g.lineTo(0,190);g.lineTo(90,120);g.lineTo(170,180);g.lineTo(260,110);g.lineTo(360,185);g.lineTo(440,130);g.lineTo(PW,175);g.lineTo(PW,PH);g.fill();
+ g.fillStyle='#1d3b34';g.fillRect(0,215,PW,55);
+ g.strokeStyle='#1a1226';g.lineWidth=2;for(let b=0;b<3;b++){const x=(t*60+b*150)%(PW+40)-20,y=70+b*22+Math.sin(t*5+b)*5,w=7+Math.sin(t*12+b)*3;
+  g.beginPath();g.moveTo(x-9,y-w);g.lineTo(x,y);g.lineTo(x+9,y-w);g.stroke()}}
+function sceneB(g,t){t=t%4;const beat=(t*2)%1;
+ const s=g.createLinearGradient(0,0,0,PH);s.addColorStop(0,'#1b1740');s.addColorStop(1,'#c9467a');g.fillStyle=s;g.fillRect(0,0,PW,PH);
+ SKY.forEach((b,i)=>{g.fillStyle='#120f2b';g.fillRect(b.x,PH-60-b.h,b.w,b.h+10);
+  for(let r=0;r<b.h/16;r++)for(let c=0;c<b.w/10;c++){if(sr(i*50+r*7+c+Math.floor(t*2))>.55){g.fillStyle='#ffd77a';g.fillRect(b.x+4+c*10,PH-60-b.h+6+r*16,5,8)}}});
+ g.fillStyle='#0a0a1a';g.fillRect(0,PH-52,PW,52);
+ for(let c=0;c<3;c++){const x=((t*110+c*170)%(PW+80))-60;g.fillStyle=c%2?'#42d6c6':'#ffb02e';g.fillRect(x,PH-40,44,14);g.fillRect(x+10,PH-50,24,10);g.fillStyle='#fff';g.fillRect(x+40,PH-36,4,5)}
+ g.fillStyle='rgba(255,90,140,'+(.9-beat*.8)+')';g.beginPath();g.arc(PW-70,60,16+(1-beat)*12,0,7);g.fill()}
+function sceneC(g,t){t=t%4;g.fillStyle='#070b16';g.fillRect(0,0,PW,PH);
+ g.fillStyle='#d9e2f2';g.beginPath();g.arc(90,60,22,0,7);g.fill();g.fillStyle='#070b16';g.beginPath();g.arc(100,55,20,0,7);g.fill();
+ g.fillStyle='#0d1424';g.fillRect(0,200,PW,70);
+ g.strokeStyle='rgba(170,200,255,.55)';g.lineWidth=1;g.beginPath();
+ for(let i=0;i<90;i++){const x=sr(i)*PW,y=((sr(i+99)*PH)+t*420*(.7+sr(i+5)*.6))%PH;g.moveTo(x,y);g.lineTo(x-3,y+12)}g.stroke();
+ g.strokeStyle='rgba(170,200,255,.5)';for(let r=0;r<4;r++){const u=((t*1.6+r*.25)%1),x=60+r*110;g.beginPath();g.ellipse(x,230+r%2*14,u*26,u*7,0,0,7);g.stroke()}
+ const f=t>2.2&&t<2.7?Math.exp(-(t-2.2)*9):0;if(f>0.02){g.fillStyle='rgba(235,240,255,'+(f*.85)+')';g.fillRect(0,0,PW,PH)}}
+const SC={A:sceneA,B:sceneB,C:sceneC},NAME={A:'Răsărit',B:'Oraș',C:'Ploaie'},COL={A:'#c9772a',B:'#7b5ce0',C:'#2a8fa8'};
+function fx(g,m){if(m==='none')return;const im=g.getImageData(0,0,PW,PH),p=im.data;
+ for(let i=0;i<p.length;i+=4){const l=.3*p[i]+.59*p[i+1]+.11*p[i+2];
+  if(m==='bw'){p[i]=p[i+1]=p[i+2]=l}else{p[i]=Math.min(255,l*1.15+25);p[i+1]=Math.min(255,l*.95+10);p[i+2]=l*.7}}
+ g.putImageData(im,0,0)}
+/* audio generat */
+const AB={};
+function mkAudio(src){const c=ac(),n=4*SR,b=c.createBuffer(1,n,SR),d=b.getChannelData(0);let s=11;const r=()=>{s=(s*16807)%2147483647;return s/2147483647*2-1};
+ if(src==='A'){[261.6,329.6,392,523.3].forEach((f,j)=>{for(let i=0;i<n;i++){const t=i/SR,sw=Math.min(1,t/1.5)*(.6+.4*Math.sin(t*1.3+j));d[i]+=.09*sw*Math.sin(2*Math.PI*f*t+Math.sin(t*4+j)*.3)}});
+  [.8,1.6,2.5,3.2].forEach((st,j)=>{const a=Math.floor(st*SR);for(let k=0;k<.25*SR;k++){const t=k/SR;d[a+k]+=.12*Math.sin(Math.PI*t/.25)*Math.sin(2*Math.PI*(2400+900*j+t*3500)*t)}})}
+ else if(src==='B'){for(let i=0;i<n;i++){const t=i/SR,bt=t%.5,hb=(t+.25)%.5;let v=0;
+  v+=.7*Math.exp(-bt*14)*Math.sin(2*Math.PI*(45+90*Math.exp(-bt*30))*bt*4);
+  v+=hb<.05?.12*r()*(1-hb/.05):0;
+  const nf=[110,110,146.8,130.8][Math.floor(t*2)%4];v+=.18*Math.sin(2*Math.PI*nf*t)*Math.exp(-bt*2.5);d[i]=v}}
+ else{let lp=0;for(let i=0;i<n;i++){lp+=(r()-lp)*.35;d[i]=.28*lp}
+  const a=Math.floor(2.2*SR);let l2=0;for(let k=0;a+k<n;k++){l2+=(r()-l2)*.02;d[a+k]+=3.5*l2*Math.exp(-k/SR*2.2)}
+  [0.3,1.1,1.9,3.0].forEach((st,j)=>{const q=Math.floor(st*SR),f=[392,329.6,293.7,261.6][j];for(let k=0;k<.9*SR&&q+k<n;k++){const t=k/SR;d[q+k]+=.14*Math.exp(-t*4)*Math.sin(2*Math.PI*f*t)}})}
+ let p=0;for(let i=0;i<n;i++)p=Math.max(p,Math.abs(d[i]));for(let i=0;i<n;i++)d[i]=d[i]/p*.7;return b}
+function abuf(src){return AB[src]||(AB[src]=mkAudio(src))}
+
+/* ===== VIDEO: montaj, redare, misiuni ===== */
+const FPS=25,HALF=.3,FXN={none:'normal',bw:'alb-negru',sepia:'sepia'},FXO=['none','bw','sepia'];
+let clips,tpos=0,vplay=null,vTitleOn=false;
+function vreset(){clips=[{src:'A',in:0,dur:4,fx:'none',mute:false},{src:'B',in:0,dur:4,fx:'none',mute:false},{src:'C',in:0,dur:4,fx:'none',mute:false}];tpos=0;$('vTr').value='cut';$('vTon').checked=false;$('vTitle').value='Orașul meu'}
+const vtot=()=>clips.reduce((s,c)=>s+c.dur,0);
+function loc(t){let x=0;for(let i=0;i<clips.length;i++){const e=x+clips[i].dur;if(t<e||i===clips.length-1)return{k:i,cs:x,ce:e};x=e}return{k:0,cs:0,ce:0}}
+function drawClip(g,c,s){SC[c.src](g,Math.max(0,s))}
+function frame(t){const L=loc(t),c=clips[L.k],mix=$('vTr').value==='mix';
+ go.clearRect(0,0,PW,PH);drawClip(go,c,c.in+(t-L.cs));fx(go,c.fx);
+ gm.drawImage(off,0,0);
+ let ov=null,a=0;
+ if(mix&&clips[L.k+1]&&t>L.ce-HALF){ov=clips[L.k+1];a=(t-(L.ce-HALF))/(2*HALF);ov={c:ov,s:ov.in+(t-L.ce)}}
+ else if(mix&&clips[L.k-1]&&t<L.cs+HALF){const p=clips[L.k-1];gm.clearRect(0,0,PW,PH);go.clearRect(0,0,PW,PH);drawClip(go,p,p.in+p.dur+(t-L.cs));fx(go,p.fx);gm.drawImage(off,0,0);
+  go.clearRect(0,0,PW,PH);drawClip(go,c,c.in+(t-L.cs));fx(go,c.fx);gp.drawImage(mix_,0,0);gp.globalAlpha=.5+(t-L.cs)/(2*HALF);gp.drawImage(off,0,0);gp.globalAlpha=1;return title(t)}
+ gp.drawImage(mix_,0,0);
+ if(ov){go.clearRect(0,0,PW,PH);drawClip(go,ov.c,ov.s);fx(go,ov.c.fx);gp.globalAlpha=a;gp.drawImage(off,0,0);gp.globalAlpha=1}
+ title(t)}
+function title(t){if($('vTon').checked&&t<2.4){const a=t<.4?t/.4:t>2?(2.4-t)/.4:1;gp.globalAlpha=Math.max(0,a);gp.fillStyle='rgba(0,0,0,.45)';gp.fillRect(0,PH/2-34,PW,64);
+  gp.fillStyle='#fff';gp.font='800 34px "Bricolage Grotesque",sans-serif';gp.textAlign='center';gp.fillText($('vTitle').value||' ',PW/2,PH/2+12);gp.textAlign='left';gp.globalAlpha=1}
+ gp.fillStyle='rgba(0,0,0,.5)';gp.fillRect(8,PH-26,150,20);gp.fillStyle='#fff';gp.font='12px monospace';gp.fillText(tc(t,FPS),14,PH-12)}
+function drawT(){const W=720,H=150,tot=vtot(),sc=W/Math.max(tot,12);gt.fillStyle='#05070b';gt.fillRect(0,0,W,H);
+ gt.fillStyle='#9aa5b8';gt.font='11px monospace';for(let s=0;s<=Math.ceil(W/sc);s++){gt.fillRect(s*sc,18,1,8);gt.fillText(s+'s',s*sc+3,13)}
+ const cur=loc(tpos).k;let x=0;
+ clips.forEach((c,i)=>{const w=c.dur*sc;gt.fillStyle=COL[c.src];gt.globalAlpha=.9;gt.fillRect(x+1,34,w-2,56);gt.globalAlpha=.55;gt.fillRect(x+1,96,w-2,34);gt.globalAlpha=1;
+  gt.strokeStyle='rgba(255,255,255,.55)';gt.beginPath();for(let k=0;k<w-4;k+=3){const h=c.mute?1:3+Math.abs(Math.sin((x+k)/7)*Math.sin((x+k)/19))*12;gt.moveTo(x+3+k,113-h);gt.lineTo(x+3+k,113+h)}gt.stroke();
+  if(i===cur){gt.strokeStyle='#fff';gt.lineWidth=2;gt.strokeRect(x+2,35,w-4,54);gt.lineWidth=1}
+  gt.fillStyle='#fff';gt.font='bold 12px sans-serif';gt.fillText(NAME[c.src],x+8,54);gt.font='11px monospace';gt.fillText(c.dur.toFixed(1)+'s'+(c.fx!=='none'?' · '+FXN[c.fx]:'')+(c.mute?' · mut':''),x+8,72);x+=w});
+ gt.fillStyle='#9aa5b8';gt.font='10px monospace';gt.fillText('V1',2,62);gt.fillText('A1',2,118);
+ const hx=tpos*sc;gt.fillStyle='#ff5a48';gt.fillRect(hx-1,16,2,H-20);gt.beginPath();gt.moveTo(hx-6,16);gt.lineTo(hx+6,16);gt.lineTo(hx,25);gt.fill()}
+function refresh(){frame(tpos);drawT();$('vTime').textContent=tc(tpos,FPS)+' / '+tc(vtot(),FPS);vmis()}
+function tpx(e){const r=ct.getBoundingClientRect(),W=720,sc=W/Math.max(vtot(),12);return Math.max(0,Math.min(vtot()-.001,(e.clientX-r.left)/r.width*W/sc))}
+let vdrag=false;ct.style.touchAction='none';
+ct.addEventListener('pointerdown',e=>{vdrag=true;ct.setPointerCapture(e.pointerId);vseek(tpx(e))});
+ct.addEventListener('pointermove',e=>{if(vdrag)vseek(tpx(e))});
+ct.addEventListener('pointerup',()=>{vdrag=false});
+function vseek(t){const was=!!vplay;if(was)vstop(true);tpos=t;refresh();if(was)vstart()}
+function vstop(keep){if(vplay){vplay.nodes.forEach(n=>{try{n.stop()}catch(e){}});vplay=null}$('vPlay').textContent='▶ Redă cu sunet'}
+function vstart(){const c=ac();if(tpos>=vtot()-.05)tpos=0;const T0=tpos,t0=c.currentTime+.05,nodes=[],mix=$('vTr').value==='mix';
+ let x=0;clips.forEach((cl,i)=>{const cs=x,ce=x+cl.dur;x=ce;if(ce<=T0||cl.mute)return;const w=Math.max(cs,T0),when=t0+(w-T0);
+  const s=c.createBufferSource();s.buffer=abuf(cl.src);const g=c.createGain();g.gain.value=.8;
+  if(mix&&i>0&&w===cs){g.gain.setValueAtTime(0,when);g.gain.linearRampToValueAtTime(.8,when+HALF)}
+  if(mix&&i<clips.length-1){g.gain.setValueAtTime(.8,t0+(ce-T0)-HALF);g.gain.linearRampToValueAtTime(0,t0+(ce-T0))}
+  s.connect(g);g.connect(c.destination);s.start(when,cl.in+(w-cs),ce-w);nodes.push(s)});
+ vplay={nodes};$('vPlay').textContent='❚❚ Pauză';
+ (function loop(){if(!vplay||vplay.nodes!==nodes)return;tpos=T0+Math.max(0,c.currentTime-t0);
+  if(tpos>=vtot()){tpos=0;vstop();refresh();return}refresh();requestAnimationFrame(loop)})()}
+$('vPlay').onclick=()=>{if(vplay){vstop();refresh()}else vstart()};
+$('vStop').onclick=()=>{vstop();tpos=0;refresh()};
+function ed(fn){const was=!!vplay;vstop();fn();tpos=Math.min(tpos,vtot()-.001);refresh()}
+$('vSplit').onclick=()=>ed(()=>{const L=loc(tpos),c=clips[L.k],cut=tpos-L.cs;if(cut<.3||c.dur-cut<.3)return;
+ clips.splice(L.k,1,Object.assign({},c,{dur:cut}),Object.assign({},c,{in:c.in+cut,dur:c.dur-cut}))});
+$('vDel').onclick=()=>ed(()=>{if(clips.length>1)clips.splice(loc(tpos).k,1)});
+$('vL').onclick=()=>ed(()=>{const k=loc(tpos).k;if(k>0){const c=clips.splice(k,1)[0];clips.splice(k-1,0,c);tpos=clips.slice(0,k-1).reduce((s,q)=>s+q.dur,0)+.01}});
+$('vR').onclick=()=>ed(()=>{const k=loc(tpos).k;if(k<clips.length-1){const c=clips.splice(k,1)[0];clips.splice(k+1,0,c);tpos=clips.slice(0,k+1).reduce((s,q)=>s+q.dur,0)+.01}});
+$('vFx').onclick=()=>ed(()=>{const c=clips[loc(tpos).k];c.fx=FXO[(FXO.indexOf(c.fx)+1)%3];$('vFx').textContent='Efect: '+FXN[c.fx]});
+$('vMute').onclick=()=>ed(()=>{const c=clips[loc(tpos).k];c.mute=!c.mute});
+['vTr','vTon','vTitle'].forEach(i=>$(i).addEventListener('input',()=>{if(i!=='vTitle'||true){vstop();refresh()}}));
+$('vRst').onclick=()=>{vstop();vreset();refresh()};
+function vmis(){const tot=vtot(),f=clips[0],l=clips[clips.length-1];
+ $('vFx').textContent='Efect: '+FXN[clips[loc(tpos).k].fx];$('vMute').textContent='Sunet: '+(clips[loc(tpos).k].mute?'oprit':'pornit');
+ const M=[['Durata totală între 7 și 9 secunde',tot>=7&&tot<=9.05],
+  ['Începe cu Orașul și se termină cu Ploaia',f.src==='B'&&l.src==='C'&&clips.length>1],
+  ['Folosește tranziția fond încrucișat',$('vTr').value==='mix'],
+  ['Afișează un titlu la început',$('vTon').checked&&$('vTitle').value.trim().length>0],
+  ['Cel puțin un clip alb-negru sau sepia',clips.some(c=>c.fx!=='none')],
+  ['Ai folosit tăierea: cel puțin 4 clipuri pe linie',clips.length>=4]];
+ $('vMis').innerHTML=M.map(m=>'<li class="'+(m[1]?'ok':'')+'"><i>'+(m[1]?'✓':'')+'</i><span>'+m[0]+'</span></li>').join('');
+ const k=M.filter(m=>m[1]).length;$('vVerd').textContent=k===6?'Reclama este gata. Apasă Redă și privește-o de la început.':'Misiuni îndeplinite: '+k+' din 6'}
+vreset();refresh();
+
+/* ===== JOC 1: întrebări ===== */
+const Q=[
+ {q:'Cum se numește fișierul neprelucrat, direct din cameră sau microfon?',o:['Proiect','Material brut','Export','Șablon'],a:1,e:'Materialul brut este punctul de plecare al oricărui montaj.'},
+ {q:'Ce operație alegi ca să scoți o pauză lungă dintr-o înregistrare audio?',o:['Normalizare','Fade out','Tăiere','Reverb'],a:2,e:'Selectezi pauza și o ștergi: tăierea.'},
+ {q:'Ce este un pixel?',o:['Un cadru video','Cel mai mic punct dintr-o imagine','Un tip de efect sonor','O pistă audio'],a:1,e:'Imaginea raster este o grilă de pixeli.'},
+ {q:'Vrei ca muzica să pornească din liniște, treptat. Ce folosești?',o:['Fade in','Crop','Contrast','Render'],a:0,e:'Fade in crește volumul de la zero.'},
+ {q:'Ce arată linia de timp (timeline)?',o:['Doar volumul','Ordinea în care clipurile apar în film','Mărimea fișierului','Numele autorului'],a:1,e:'Ce e mai la stânga apare mai devreme.'},
+ {q:'Ce se întâmplă dacă setezi saturația la zero?',o:['Imaginea devine alb-negru','Imaginea devine mai mare','Imaginea se decupează','Se adaugă sunet'],a:0,e:'Fără saturație rămân doar nuanțe de gri.'},
+ {q:'Ce format alegi pentru o melodie trimisă pe internet, cu fișier mic?',o:['.wav','.mp3','.png','.psd'],a:1,e:'.mp3 e comprimat și potrivit pentru trimis.'},
+ {q:'Cum se numește crearea fișierului video final din proiect?',o:['Import','Selecție','Render / export','Normalizare'],a:2,e:'La render programul aplică toate instrucțiunile și scrie fișierul.'},
+ {q:'Care este avantajul editării nedistructive?',o:['Fișierul e mai mic','Originalul rămâne neschimbat și poți anula','Nu ai nevoie de program','Sunetul e mai tare'],a:1,e:'Instrucțiunile se aplică doar la export, deci originalul e în siguranță.'},
+ {q:'Un film are 25 fps. Câte cadre sunt în 2 secunde?',o:['25','50','100','12'],a:1,e:'25 × 2 = 50 de cadre.'}
+];
+const g1=$('g1');let qi=0,pts=0,streak=0,locked=false,okc=0;
+function showQ(){locked=false;const q=Q[qi];
+ g1.innerHTML='<div class="score eyebrow"><span>Proba 1 · întrebarea '+(qi+1)+' din '+Q.length+'</span><span id="sc">Puncte: '+pts+' · serie: '+streak+'</span></div><div class="q"></div><div class="opts"></div><div class="fb" aria-live="polite"></div>';
+ g1.querySelector('.q').textContent=q.q;const box=g1.querySelector('.opts');
+ q.o.forEach((t,k)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>pick(k,b);box.appendChild(b)})}
+function pick(k,b){if(locked)return;locked=true;const q=Q[qi],bs=g1.querySelectorAll('.opts button'),fb=g1.querySelector('.fb');
+ bs[q.a].classList.add('ok');
+ if(k===q.a){okc++;streak++;const bonus=streak>=3?5:0;pts+=10+bonus;fb.textContent='Corect. '+q.e+(bonus?' Bonus de serie: +5.':'')}
+ else{b.classList.add('no');streak=0;fb.textContent='Nu chiar. '+q.e}
+ g1.querySelector('#sc').textContent='Puncte: '+pts+' · serie: '+streak;
+ const n=document.createElement('button');n.type='button';n.className='next';n.textContent=qi<Q.length-1?'Următoarea':'Vezi rezultatul';
+ n.onclick=()=>{qi++;qi<Q.length?showQ():endQ()};g1.appendChild(n);n.focus()}
+function endQ(){const r=pts>=120?'Regizor':pts>=80?'Montor':'Stagiar';
+ g1.innerHTML='<div class="eyebrow">Proba 1 · rezultat</div><div class="q">'+r+' · '+pts+' puncte</div><p>'+okc+' răspunsuri corecte din '+Q.length+'. Scorul maxim este 130 de puncte.</p>';
+ const b=document.createElement('button');b.type='button';b.className='next';b.textContent='Joacă din nou';b.onclick=()=>{qi=0;pts=0;streak=0;okc=0;showQ()};g1.appendChild(b)}
+showQ();
+
+/* ===== JOC 2: ordinea pașilor ===== */
+const S=['Importă materialul brut în program','Taie părțile inutile','Aranjează clipurile pe linia de timp','Ajustează sunetul și culorile','Adaugă titluri și tranziții','Exportă fișierul în format .mp4'];
+const g2=$('g2');let nxt=0,err=0;
+function showO(){nxt=0;err=0;const idx=S.map((_,i)=>i).sort((a,b)=>((a*5+3)%7)-((b*5+3)%7));
+ g2.innerHTML='<div class="eyebrow">Proba 2 · pune pașii în ordine</div><div class="q">Atinge pașii în ordinea corectă a unui montaj.</div><div class="order"></div><div class="fb" aria-live="polite"></div>';
+ const box=g2.querySelector('.order'),fb=g2.querySelector('.fb');
+ idx.forEach(i=>{const b=document.createElement('button');b.type='button';b.textContent=S[i];
+  b.onclick=()=>{if(b.classList.contains('done'))return;
+   if(i===nxt){b.classList.add('done');b.textContent=(nxt+1)+'. '+S[i];nxt++;fb.textContent=nxt<S.length?'Bine. Urmează pasul '+(nxt+1)+'.':'Ai terminat cu '+err+' greșeli.'+(err===0?' Montaj perfect.':'');
+    if(nxt===S.length){const r=document.createElement('button');r.type='button';r.className='next';r.textContent='Încearcă din nou';r.onclick=showO;g2.appendChild(r)}}
+   else{err++;fb.textContent='Nu încă. Gândește-te ce trebuie să existe înainte de acest pas.'}};
+  box.appendChild(b)})}
+showO();
+})();
+</script>
+</body>
+</html>
