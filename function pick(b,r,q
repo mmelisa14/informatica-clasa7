@@ -751,14 +751,14 @@ function ccShow(i){const sc=CS[i];cScr=i;ccP.innerHTML='';
       q.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;text-align:center;min-height:'+(r.th?56:50)+'px;font-size:.72rem;cursor:pointer;position:relative;padding:6px 4px;line-height:1.2';
       if(r.th)q.style.background='linear-gradient(135deg,#5b4bb7,#1f7a8c)';
       q.textContent=x;
-      q.onclick=()=>pick(b,r,q);
+      q.onclick=()=>ccPick(b,r,q);
       b.appendChild(q);
     });
     const nb=document.createElement('i');nb.className='n';nb.textContent=j+1;
     b.appendChild(nb);
   }else{
     b.innerHTML=r.h+'<i class="n">'+(j+1)+'</i>';
-    b.onclick=()=>pick(b,r);
+    b.onclick=()=>ccPick(b,r);
   }
   ccP.appendChild(b);
  });
@@ -772,7 +772,7 @@ function info(r){
   if(r.l){l.textContent='Legătură cu lecția: '+r.l;l.hidden=false;}
   else{l.textContent='';l.hidden=true;}
 }
-function pick(b,r,q){ccP.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));(q||b).classList.add('on');info(r)}
+function ccPick(b,r,q){ccP.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));(q||b).classList.add('on');info(r)}
 CS.forEach((c,i)=>{
   const b=document.createElement('button');
   b.type='button';
